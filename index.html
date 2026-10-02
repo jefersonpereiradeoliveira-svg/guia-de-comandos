@@ -1,0 +1,2100 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Guia de comandos: Python, Java, R e JavaScript</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#FAFBFD; --surface:#FFFFFF; --ink:#0E1626; --muted:#566176; --rule:#E1E6EE;
+  --code:#EEF2F8; --hover:#F3F6FB; --mark:#FFE58A; --markink:#1A1400;
+  --py:#2B64AE; --java:#B83F0B; --r:#6B3FC4; --js:#15803D;
+  --sans:'IBM Plex Sans',system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
+  --mono:'IBM Plex Mono',ui-monospace,'SF Mono',Menlo,Consolas,'Liberation Mono',monospace;
+  --hdr:124px;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#0A0F1C; --surface:#10172A; --ink:#E7ECF6; --muted:#9AA6BD; --rule:#1F2A44;
+    --code:#0C1322; --hover:#131C33; --mark:#6B5A12; --markink:#FFF4C2;
+    --py:#7DB0F2; --java:#F59A66; --r:#BBA2FF; --js:#6EDC8F;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0A0F1C; --surface:#10172A; --ink:#E7ECF6; --muted:#9AA6BD; --rule:#1F2A44;
+  --code:#0C1322; --hover:#131C33; --mark:#6B5A12; --markink:#FFF4C2;
+  --py:#7DB0F2; --java:#F59A66; --r:#BBA2FF; --js:#6EDC8F;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + var(--hdr) + 8px);-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.6 var(--sans);-webkit-font-smoothing:antialiased}
+.py{--lc:var(--py)} .java{--lc:var(--java)} .r{--lc:var(--r)} .js{--lc:var(--js)} .cmp{--lc:var(--ink)}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+
+/* Barra superior */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:30;background:color-mix(in srgb,var(--bg) 94%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--rule)}
+.top-in{max-width:1240px;margin:0 auto;padding:12px 24px 10px;display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px 20px;align-items:center}
+.brand{font-weight:600;font-size:15px;letter-spacing:-.01em;white-space:nowrap}
+.search{position:relative}
+.search svg{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--muted);pointer-events:none}
+.search input{width:100%;font:inherit;font-size:16px;line-height:1.4;padding:11px 44px 11px 42px;border:1.5px solid var(--rule);border-radius:10px;background:var(--surface);color:var(--ink);-webkit-appearance:none;appearance:none}
+.search input::placeholder{color:var(--muted);opacity:1}
+.search input:focus{outline:none;border-color:var(--ink);box-shadow:0 0 0 3px color-mix(in srgb,var(--ink) 14%,transparent)}
+.search input::-webkit-search-cancel-button{display:none}
+.kbd{position:absolute;right:12px;top:50%;transform:translateY(-50%);font:12px/1 var(--mono);color:var(--muted);border:1px solid var(--rule);border-radius:5px;padding:3px 7px;pointer-events:none}
+.search.has .kbd{display:none}
+.actions{display:flex;gap:8px;align-items:center}
+.btn{border:1px solid var(--rule);background:var(--surface);border-radius:9px;padding:9px 14px;font-size:14px;font-weight:500;line-height:1.2;display:inline-flex;align-items:center;gap:8px;min-height:40px}
+.btn:hover{border-color:var(--muted)}
+.btn.pdf{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.btn.pdf:hover{opacity:.9}
+.btn[disabled]{opacity:.6;cursor:progress}
+.btn.icon{padding:9px 11px}
+.only-narrow{display:none}
+.filters{grid-column:1 / -1;display:flex;flex-wrap:wrap;gap:8px}
+.fchip{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--rule);background:var(--surface);border-radius:999px;padding:5px 12px 5px 10px;font-size:13.5px;line-height:1.3}
+.fchip .dot{width:9px;height:9px;border-radius:50%;background:var(--lc,var(--muted));flex:none}
+.fchip .n{color:var(--muted);font-variant-numeric:tabular-nums}
+.fchip:hover{border-color:var(--muted)}
+.fchip[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+.fchip[aria-pressed="true"] .n{color:inherit;opacity:.75}
+.fchip[aria-pressed="true"] .dot{box-shadow:0 0 0 2px var(--bg)}
+
+/* Layout */
+.wrap{max-width:1240px;margin:0 auto;padding:0 24px 80px;display:grid;grid-template-columns:248px minmax(0,1fr);gap:56px}
+aside{position:sticky;top:calc(env(safe-area-inset-top,0px) + var(--hdr) + 8px);align-self:start;max-height:calc(100vh - var(--hdr) - 24px);overflow:auto;padding:28px 0 24px;scrollbar-width:thin}
+.ng{margin:0 0 20px}
+.gh{display:flex;align-items:center;gap:8px;font-weight:600;font-size:14px;margin:0 0 6px}
+.gh .dot{width:9px;height:9px;border-radius:50%;background:var(--lc)}
+.nl{display:flex;justify-content:space-between;gap:10px;padding:5px 10px;margin-left:4px;border-left:2px solid var(--rule);color:var(--muted);text-decoration:none;font-size:13.5px;line-height:1.4}
+.nl b{font-weight:500;font-variant-numeric:tabular-nums}
+.nl:hover{color:var(--ink)}
+.nl.on{color:var(--ink);border-left-color:var(--lc);font-weight:500}
+main{min-width:0}
+
+/* Abertura */
+.hero{padding:44px 0 4px;max-width:760px}
+h1{font-size:clamp(30px,4.4vw,48px);line-height:1.08;letter-spacing:-.025em;font-weight:600;margin:0 0 16px}
+.lead{font-size:17px;color:var(--muted);margin:0 0 10px;max-width:60ch}
+.meta{font-size:14px;color:var(--muted);margin:0 0 22px}
+.quick{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.quick > span{font-size:14px;color:var(--muted);margin-right:4px}
+.qs{font:13px/1.3 var(--mono);border:1px solid var(--rule);background:var(--surface);border-radius:7px;padding:5px 10px}
+.qs:hover{border-color:var(--muted)}
+.searching .hero{display:none}
+
+/* Resultado */
+.res{margin:28px 0 0;font-size:14.5px;color:var(--muted)}
+.res strong{color:var(--ink);font-weight:600}
+.lnk{border:0;background:none;padding:0 0 0 10px;text-decoration:underline;text-underline-offset:3px;color:var(--ink);font-size:14px}
+.empty{padding:48px 0}
+.empty h2{font-size:22px;margin:0 0 8px;letter-spacing:-.01em}
+.empty p{color:var(--muted);margin:0 0 16px}
+
+/* Seções */
+.sec{padding-top:44px}
+.sh{display:flex;align-items:baseline;gap:6px 14px;flex-wrap:wrap;border-top:2px solid var(--lc);padding-top:14px;margin-bottom:8px}
+.sh .lang{font-size:14px;font-weight:600;color:var(--lc)}
+.sh h2{font-size:24px;line-height:1.25;letter-spacing:-.015em;font-weight:600;margin:0}
+.sh .cnt{margin-left:auto;font-size:13px;color:var(--muted);white-space:nowrap}
+.sec h3{font-size:16.5px;font-weight:600;letter-spacing:-.005em;margin:32px 0 10px}
+.sec p{margin:0 0 14px;max-width:72ch}
+.sec ul{margin:0 0 14px;padding-left:20px;max-width:72ch}
+.sec li{margin:0 0 6px}
+code{font-family:var(--mono);font-size:12.5px;background:var(--code);padding:2px 6px;border-radius:5px;overflow-wrap:anywhere}
+.sec p code,.sec li code{font-size:12.5px}
+
+/* Tabelas */
+.tw{overflow-x:auto;border:1px solid var(--rule);border-radius:10px;background:var(--surface)}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{text-align:left;font-weight:500;font-size:13px;color:var(--muted);padding:9px 14px;border-bottom:1px solid var(--rule);background:var(--hover);white-space:nowrap}
+td{padding:9px 14px;border-bottom:1px solid var(--rule);vertical-align:top}
+tbody tr:last-child td{border-bottom:0}
+tbody tr:hover td{background:var(--hover)}
+table[data-cmd="0"] td:first-child{width:48%}
+table[data-cmd="1"] td:first-child{width:30%}
+.cw{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.cp{flex:none;border:1px solid var(--rule);background:var(--surface);color:var(--muted);border-radius:7px;width:28px;height:28px;display:inline-flex;align-items:center;justify-content:center;opacity:0;transition:opacity .12s}
+tr:hover .cp,.cp:focus-visible,.pre:hover .cp{opacity:1}
+.cp:hover{color:var(--ink);border-color:var(--muted)}
+@media (hover:none){.cp{opacity:1}}
+.pre{position:relative;margin:0 0 14px}
+.pre pre{margin:0;background:var(--code);border:1px solid var(--rule);border-radius:10px;padding:14px 52px 14px 16px;overflow-x:auto;font:13px/1.6 var(--mono)}
+.pre pre code{background:none;padding:0;font-size:inherit}
+.pre .cp{position:absolute;top:10px;right:10px}
+mark{background:var(--mark);color:var(--markink);border-radius:3px;padding:0 1px}
+
+/* Aviso */
+#toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translate(-50%,16px);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:9px;font-size:14px;opacity:0;pointer-events:none;transition:opacity .18s,transform .18s;z-index:60;max-width:calc(100vw - 32px)}
+#toast.show{opacity:1;transform:translate(-50%,0)}
+
+/* Telas estreitas */
+@media (max-width:900px){
+  .wrap{display:block;padding:0 18px 64px}
+  aside{display:none}
+  .navopen aside{display:block;position:fixed;left:0;right:0;bottom:0;top:calc(env(safe-area-inset-top,0px) + var(--hdr));max-height:none;background:var(--bg);z-index:25;padding:18px 18px calc(24px + env(safe-area-inset-bottom,0px))}
+  .only-narrow{display:inline-flex}
+  .top-in{padding:10px 18px 8px;grid-template-columns:minmax(0,1fr) auto}
+  .search{grid-column:1 / -1;order:3}
+  .filters{order:4}
+  .hero{padding-top:28px}
+}
+@media (max-width:520px){
+  .sh .cnt{margin-left:0;width:100%}
+  th,td{padding:8px 10px}
+  .btn{padding:8px 11px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+
+/* Impressão e PDF do navegador */
+@media print{
+  :root:root:root{--bg:#fff;--surface:#fff;--ink:#111;--muted:#444;--rule:#cfcfcf;--code:#f2f2f2;--hover:#f6f6f6;--py:#2B64AE;--java:#B83F0B;--r:#6B3FC4;--js:#15803D;padding:0}
+  body{font-size:11px;background:#fff}
+  .top,aside,.hero .quick,.cp,#toast,.res .lnk{display:none!important}
+  .wrap{display:block;max-width:none;padding:0}
+  .tw{border:0;overflow:visible}
+  tr{break-inside:avoid}
+  .sh,h3{break-after:avoid}
+  .sec{padding-top:22px}
+  .searching .hero{display:block}
+}
+</style>
+</head>
+<body>
+<header class="top" id="top">
+  <div class="top-in">
+    <div class="brand">Guia de comandos</div>
+    <div class="actions">
+      <button class="btn only-narrow" id="navbtn" type="button" aria-expanded="false" aria-controls="side">Seções</button>
+      <button class="btn icon" id="theme" type="button" aria-label="Alternar entre tema claro e escuro">
+        <svg viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="8" cy="8" r="5.5"/><path d="M8 2.5v11a5.5 5.5 0 0 0 0-11z" fill="currentColor"/></svg>
+      </button>
+      <button class="btn pdf" id="pdf" type="button">
+        <svg viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M8 2v8m0 0L5 7m3 3 3-3M3 13h10"/></svg>
+        <span id="pdft">Gerar PDF</span>
+      </button>
+    </div>
+    <div class="search" id="sbox">
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><circle cx="8" cy="8" r="5.5"/><path d="M12.2 12.2 16 16"/></svg>
+      <input id="q" type="search" placeholder="Buscar comando ou palavra, por exemplo venv, mvn ou renv" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Buscar no guia">
+      <span class="kbd" aria-hidden="true">/</span>
+    </div>
+    <div class="filters" id="filters" role="group" aria-label="Filtrar por linguagem"></div>
+  </div>
+</header>
+
+<div class="wrap">
+  <aside id="side" aria-label="Seções do guia"><nav id="nav"></nav></aside>
+  <main id="main">
+    <section class="hero" id="hero">
+      <h1>Guia de comandos: Python, Java, R e JavaScript</h1>
+      <p class="lead">Instalação, versões, ambientes, pacotes, execução e ferramentas de cada linguagem, em tabelas que você pesquisa e copia com um clique.</p>
+      <p class="meta" id="stats"></p>
+      <div class="quick" id="quick"></div>
+    </section>
+    <div id="content"></div>
+  </main>
+</div>
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script type="text/markdown" id="md">
+## Python: versões, instalação e troca de versão
+
+O Python não troca de versão sozinho: você escolhe a versão com o launcher `py` (Windows), com `pyenv` ou `uv` (qualquer sistema) ou com o `conda`. Os comandos abaixo cobrem ver, instalar, fixar e remover versões.
+
+### Ver a versão e o caminho
+
+| Comando | Para que serve |
+| --- | --- |
+| `python --version` ou `python -V` | Mostra a versão do Python ativo |
+| `python -VV` | Versão detalhada, com compilador e build |
+| `python3 --version` | Mesmo que acima em Linux/Mac, onde `python` pode não existir |
+| `where python` (Windows) | Lista todos os `python.exe` encontrados no PATH |
+| `which -a python3` (Linux/Mac) | Lista todos os executáveis no PATH |
+| `python -c "import sys; print(sys.executable)"` | Caminho do executável que está rodando |
+| `python -c "import sys; print(sys.version_info)"` | Versão em formato de tupla (major, minor, micro) |
+| `python -m site` | Mostra `sys.path`, site-packages do usuário e do sistema |
+| `python -m sysconfig` | Despeja a configuração de build e os caminhos de instalação |
+| `pip --version` | Versão do pip e a qual Python ele pertence |
+
+### Windows: launcher `py`
+
+O launcher vem com o instalador oficial e permite escolher a versão em cada comando.
+
+| Comando | Para que serve |
+| --- | --- |
+| `py --list` ou `py -0` | Lista as versões instaladas |
+| `py -0p` | Lista com o caminho de cada instalação |
+| `py script.py` | Roda com a versão padrão do launcher |
+| `py -3.12 script.py` | Roda com o Python 3.12 |
+| `py -3.12 -m venv venv` | Cria um ambiente virtual com a 3.12 |
+| `py -3.12 -m pip install pandas` | Instala usando o pip da 3.12 |
+| `set PY_PYTHON=3.12` | Define a versão padrão do launcher na sessão do cmd |
+
+Nas versões novas do Windows pode existir o Python Install Manager, que também usa o comando `py`: `py install 3.13` instala, `py list` lista e `py uninstall 3.13` remove. Confirme o que sua máquina tem com `py help`.
+
+### Instalar pelo gerenciador de pacotes do sistema
+
+| Sistema | Comando |
+| --- | --- |
+| Windows (winget) | `winget install Python.Python.3.12` |
+| Windows (atualizar) | `winget upgrade Python.Python.3.12` |
+| Windows (listar) | `winget list python` |
+| macOS (Homebrew) | `brew install python@3.12` |
+| macOS (atualizar) | `brew upgrade python@3.12` |
+| Ubuntu/Debian | `sudo apt install python3.12 python3.12-venv python3-pip` |
+| Ubuntu (versões mais novas) | `sudo add-apt-repository ppa:deadsnakes/ppa` e depois `sudo apt update` |
+| Ubuntu (trocar o padrão) | `sudo update-alternatives --config python3` |
+| Fedora | `sudo dnf install python3.12` |
+
+### pyenv (Linux, Mac e pyenv-win)
+
+O `pyenv` instala várias versões lado a lado e troca entre elas por pasta ou globalmente.
+
+| Comando | Para que serve |
+| --- | --- |
+| `pyenv install --list` | Lista as versões disponíveis para instalar (no pyenv-win: `pyenv install -l`) |
+| `pyenv install 3.12.7` | Instala uma versão específica |
+| `pyenv versions` | Lista as versões instaladas |
+| `pyenv version` | Mostra a versão ativa e de onde veio |
+| `pyenv global 3.12.7` | Define a versão padrão do usuário |
+| `pyenv local 3.11.9` | Fixa a versão na pasta atual (cria o arquivo `.python-version`) |
+| `pyenv shell 3.10.14` | Define a versão só para o terminal aberto |
+| `pyenv uninstall 3.9.18` | Remove uma versão |
+| `pyenv which python` | Caminho real do `python` que o pyenv está usando |
+| `pyenv rehash` | Reconstrói os atalhos após instalar pacotes com executáveis |
+| `pyenv update` | Atualiza o próprio pyenv (disponível no pyenv-win) |
+
+### uv
+
+O `uv` baixa o Python sozinho, sem compilar, e é bem mais rápido que o pyenv.
+
+| Comando | Para que serve |
+| --- | --- |
+| `uv python list` | Lista versões disponíveis e instaladas |
+| `uv python install 3.13` | Baixa e instala a 3.13 |
+| `uv python install 3.11 3.12 3.13` | Instala várias de uma vez |
+| `uv python pin 3.12` | Grava a versão em `.python-version` no projeto |
+| `uv python find` | Mostra qual Python seria usado agora |
+| `uv python uninstall 3.11` | Remove uma versão |
+| `uv venv --python 3.12` | Cria um ambiente virtual com a 3.12 |
+| `uv run --python 3.12 script.py` | Roda um script com a versão escolhida |
+
+### conda
+
+No conda a versão do Python faz parte do ambiente: cada ambiente tem a sua.
+
+| Comando | Para que serve |
+| --- | --- |
+| `conda create -n meuenv python=3.11` | Cria um ambiente já com o Python 3.11 |
+| `conda activate meuenv` | Ativa o ambiente |
+| `conda install python=3.12` | Troca a versão dentro do ambiente ativo |
+| `conda search python` | Lista as versões disponíveis |
+| `python --version` | Confere a versão depois de ativar |
+
+Dentro de um ambiente virtual (`venv`) não dá para trocar a versão do Python. Crie outro ambiente com a versão desejada e reinstale os pacotes com `pip install -r requirements.txt`.
+
+## Python: ambientes virtuais
+
+Um ambiente virtual isola as bibliotecas de cada projeto. O básico é `python -m venv venv`; `virtualenv`, `conda`, `uv`, `poetry` e `pipenv` fazem a mesma função com recursos extras.
+
+### venv (já vem com o Python)
+
+| Comando | Para que serve |
+| --- | --- |
+| `python -m venv venv` | Cria o ambiente na pasta `venv` |
+| `python -m venv .venv` | Mesma coisa, com pasta oculta (convenção de muitos editores) |
+| `python -m venv venv --system-site-packages` | O ambiente enxerga também os pacotes globais |
+| `python -m venv venv --clear` | Apaga o conteúdo e recria o ambiente |
+| `python -m venv venv --upgrade` | Atualiza o ambiente para o Python que está rodando o comando |
+| `python -m venv venv --without-pip` | Cria sem instalar o pip |
+| `python -m venv venv --prompt meuapp` | Muda o nome que aparece no terminal |
+
+### Ativar e desativar
+
+| Terminal | Comando |
+| --- | --- |
+| Windows cmd | `venv\Scripts\activate` |
+| Windows PowerShell | `venv\Scripts\Activate.ps1` |
+| Git Bash no Windows | `source venv/Scripts/activate` |
+| Linux e Mac (bash/zsh) | `source venv/bin/activate` |
+| Linux e Mac (fish) | `source venv/bin/activate.fish` |
+| Qualquer um | `deactivate` |
+
+Se o PowerShell bloquear o script, rode uma vez `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned`.
+
+### Conferir e apagar
+
+| Comando | Para que serve |
+| --- | --- |
+| `where python` (Windows) ou `which python` (Linux/Mac) | Deve apontar para dentro da pasta `venv` |
+| `python -c "import sys; print(sys.prefix)"` | Mostra a pasta do ambiente ativo |
+| `pip list` | Lista o que está instalado no ambiente |
+| `rmdir /s /q venv` (Windows) | Apaga o ambiente |
+| `rm -rf venv` (Linux/Mac) | Apaga o ambiente |
+
+O ambiente é só uma pasta: não copie para outra máquina, recrie com `pip install -r requirements.txt`. Coloque `venv/` no `.gitignore`.
+
+### virtualenv (alternativa ao venv)
+
+| Comando | Para que serve |
+| --- | --- |
+| `pip install virtualenv` | Instala a ferramenta |
+| `virtualenv venv` | Cria o ambiente |
+| `virtualenv -p python3.11 venv` | Cria com uma versão específica |
+| `virtualenv --clear venv` | Recria limpando o conteúdo |
+
+### conda
+
+| Comando | Para que serve |
+| --- | --- |
+| `conda create -n nome python=3.11` | Cria um ambiente com a versão escolhida |
+| `conda create -n nome python=3.11 pandas numpy` | Já cria com pacotes instalados |
+| `conda create --prefix ./env python=3.11` | Cria o ambiente dentro da pasta do projeto |
+| `conda activate nome` | Ativa |
+| `conda deactivate` | Desativa |
+| `conda env list` | Lista os ambientes |
+| `conda list` | Lista pacotes do ambiente ativo |
+| `conda install pacote` | Instala um pacote |
+| `conda install -c conda-forge pacote` | Instala usando o canal conda-forge |
+| `conda update pacote` | Atualiza um pacote |
+| `conda remove pacote` | Remove um pacote |
+| `conda env export > environment.yml` | Exporta o ambiente completo |
+| `conda env export --from-history > environment.yml` | Exporta só o que você instalou de propósito |
+| `conda env create -f environment.yml` | Recria um ambiente a partir do arquivo |
+| `conda env update -f environment.yml --prune` | Atualiza o ambiente e remove o que saiu do arquivo |
+| `conda create -n novo --clone antigo` | Copia um ambiente |
+| `conda env remove -n nome` | Apaga um ambiente |
+| `conda config --add channels conda-forge` | Adiciona um canal padrão |
+| `conda clean --all` | Limpa cache e pacotes baixados |
+| `conda update conda` | Atualiza o próprio conda |
+| `conda init` | Configura o terminal para usar o conda |
+
+### uv
+
+| Comando | Para que serve |
+| --- | --- |
+| `uv venv` | Cria o ambiente na pasta `.venv` |
+| `uv venv --python 3.12` | Cria com a versão escolhida |
+| `uv init` | Cria um projeto com `pyproject.toml` |
+| `uv add pandas` | Adiciona uma dependência ao projeto e instala |
+| `uv add --dev pytest` | Adiciona uma dependência de desenvolvimento |
+| `uv remove pandas` | Remove uma dependência |
+| `uv sync` | Instala exatamente o que está no arquivo de lock |
+| `uv lock` | Gera ou atualiza o arquivo de lock |
+| `uv run script.py` | Roda um script dentro do ambiente do projeto |
+| `uv tree` | Mostra a árvore de dependências |
+| `uv pip install pacote` | Usa o `uv` como um pip mais rápido |
+| `uv pip install -r requirements.txt` | Instala a partir de um requirements |
+| `uv pip freeze` | Lista os pacotes instalados |
+| `uv tool install ruff` | Instala uma ferramenta de linha de comando isolada |
+| `uvx ruff check .` | Roda uma ferramenta sem instalar |
+| `uv self update` | Atualiza o `uv` |
+
+### poetry
+
+| Comando | Para que serve |
+| --- | --- |
+| `poetry new nome` | Cria um projeto novo com estrutura de pastas |
+| `poetry init` | Cria o `pyproject.toml` numa pasta existente |
+| `poetry install` | Instala as dependências do projeto |
+| `poetry add pacote` | Adiciona e instala uma dependência |
+| `poetry add --group dev pytest` | Adiciona uma dependência de desenvolvimento |
+| `poetry remove pacote` | Remove uma dependência |
+| `poetry update` | Atualiza as dependências dentro das regras do arquivo |
+| `poetry lock` | Gera o arquivo de lock |
+| `poetry show --tree` | Mostra a árvore de dependências |
+| `poetry run python script.py` | Roda um comando dentro do ambiente |
+| `poetry env use 3.12` | Define a versão do Python do projeto |
+| `poetry env list` | Lista os ambientes do projeto |
+| `poetry env info` | Mostra caminho e versão do ambiente |
+| `poetry env activate` | Mostra o comando para ativar o ambiente (Poetry 2) |
+| `poetry shell` | Abre um terminal dentro do ambiente (Poetry 1, ou 2 com plugin) |
+| `poetry config virtualenvs.in-project true` | Cria o ambiente dentro da pasta do projeto |
+| `poetry build` | Gera o pacote para distribuição |
+| `poetry publish` | Publica no PyPI |
+
+### pipenv
+
+| Comando | Para que serve |
+| --- | --- |
+| `pip install pipenv` | Instala a ferramenta |
+| `pipenv install` | Cria o ambiente e instala o que está no `Pipfile` |
+| `pipenv install pacote` | Instala e registra no `Pipfile` |
+| `pipenv install --dev pytest` | Instala como dependência de desenvolvimento |
+| `pipenv uninstall pacote` | Remove um pacote |
+| `pipenv shell` | Entra no ambiente |
+| `pipenv run python script.py` | Roda um comando dentro do ambiente |
+| `pipenv lock` | Gera o `Pipfile.lock` |
+| `pipenv graph` | Mostra a árvore de dependências |
+| `pipenv --venv` | Mostra o caminho do ambiente |
+| `pipenv --rm` | Apaga o ambiente |
+
+## Python: pip
+
+O `pip` instala, lista, atualiza e remove bibliotecas. Prefira chamar como `python -m pip`, que garante que o pip é o do Python que você está usando.
+
+### Instalar
+
+| Comando | Para que serve |
+| --- | --- |
+| `pip install pacote` | Instala a versão mais recente |
+| `pip install pacote==1.2.3` | Instala uma versão exata |
+| `pip install "pacote>=1.2,<2"` | Instala dentro de uma faixa de versões |
+| `pip install pacote1 pacote2` | Instala vários de uma vez |
+| `pip install pacote[extra]` | Instala com dependências opcionais (extras) |
+| `pip install -r requirements.txt` | Instala tudo que está no arquivo |
+| `pip install -U pacote` | Atualiza um pacote (`--upgrade`) |
+| `python -m pip install --upgrade pip` | Atualiza o próprio pip |
+| `pip install -e .` | Instala o projeto da pasta atual em modo editável |
+| `pip install .` | Instala o projeto da pasta atual |
+| `pip install ./arquivo.whl` | Instala a partir de um arquivo local |
+| `pip install git+https://github.com/usuario/repo.git` | Instala direto de um repositório Git |
+| `pip install --user pacote` | Instala só para o usuário atual |
+| `pip install --no-deps pacote` | Instala sem as dependências |
+| `pip install --force-reinstall pacote` | Reinstala mesmo que já esteja instalado |
+| `pip install --no-cache-dir pacote` | Ignora o cache de downloads |
+| `pip install --pre pacote` | Aceita versões pré-lançamento (alpha, beta, rc) |
+| `pip install --dry-run pacote` | Mostra o que seria instalado, sem instalar |
+| `pip install -c constraints.txt -r requirements.txt` | Instala respeitando um arquivo de restrições de versão |
+| `pip install --require-hashes -r requirements.txt` | Exige o hash de cada pacote (mais seguro) |
+
+### Origem dos pacotes, proxy e rede
+
+| Comando | Para que serve |
+| --- | --- |
+| `pip install --index-url URL pacote` | Usa outro índice no lugar do PyPI |
+| `pip install --extra-index-url URL pacote` | Usa outro índice além do PyPI |
+| `pip install --trusted-host host pacote` | Aceita um host sem HTTPS válido (use só em rede interna) |
+| `pip install --proxy http://usuario:senha@host:porta pacote` | Instala atrás de proxy |
+| `pip install --no-index --find-links=pasta pacote` | Instala offline a partir de uma pasta de arquivos |
+| `pip download pacote -d pasta` | Baixa o pacote e as dependências sem instalar |
+| `pip wheel pacote -w pasta` | Gera arquivos `.whl` |
+| `pip hash arquivo.whl` | Calcula o hash de um arquivo |
+
+### Listar e inspecionar
+
+| Comando | Para que serve |
+| --- | --- |
+| `pip list` | Lista os pacotes instalados |
+| `pip list --outdated` | Lista os que têm versão nova |
+| `pip list --not-required` | Lista só os que não são dependência de outro |
+| `pip show pacote` | Versão, autor, dependências e local de um pacote |
+| `pip show -f pacote` | Mostra também os arquivos instalados |
+| `pip freeze` | Lista os pacotes no formato `nome==versão` |
+| `pip freeze > requirements.txt` | Salva a lista num arquivo |
+| `pip check` | Procura dependências quebradas ou conflitantes |
+| `pip index versions pacote` | Lista as versões disponíveis no índice (recurso experimental) |
+
+O comando `pip search` não funciona mais, porque o PyPI desativou a busca. Pesquise em pypi.org.
+
+### Remover
+
+| Comando | Para que serve |
+| --- | --- |
+| `pip uninstall pacote` | Remove, pedindo confirmação |
+| `pip uninstall -y pacote` | Remove sem perguntar |
+| `pip uninstall -r requirements.txt -y` | Remove tudo que está no arquivo |
+
+Para esvaziar um ambiente: `pip freeze > tudo.txt` e depois `pip uninstall -r tudo.txt -y`.
+
+### Cache, configuração e diagnóstico
+
+| Comando | Para que serve |
+| --- | --- |
+| `pip cache dir` | Mostra onde fica o cache |
+| `pip cache info` | Tamanho e quantidade de itens do cache |
+| `pip cache list` | Lista os arquivos no cache |
+| `pip cache remove pacote` | Remove um pacote do cache |
+| `pip cache purge` | Esvazia o cache |
+| `pip config list` | Mostra a configuração ativa |
+| `pip config debug` | Mostra de quais arquivos a configuração vem |
+| `pip config set global.index-url URL` | Define o índice padrão |
+| `pip config unset global.index-url` | Remove uma configuração |
+| `pip debug --verbose` | Informações para diagnóstico (versão, tags compatíveis) |
+| `pip install -v pacote` | Mostra detalhes da instalação (`-vv` e `-vvv` mostram mais) |
+| `pip help install` | Ajuda de um comando |
+
+### Formato do requirements.txt
+
+```text
+pandas==2.2.3      # versão exata
+requests>=2.31     # a partir da 2.31
+streamlit~=1.40    # compatível: 1.40 ou superior, abaixo de 2.0
+plotly             # qualquer versão
+uvicorn[standard]  # com extras
+-r dev-requirements.txt
+git+https://github.com/usuario/repo.git@main
+```
+
+### Ferramentas que complementam o pip
+
+| Comando | Para que serve |
+| --- | --- |
+| `pip install pip-tools` | Instala o `pip-compile` e o `pip-sync` |
+| `pip-compile requirements.in` | Gera um `requirements.txt` com todas as versões fixadas |
+| `pip-sync` | Deixa o ambiente igual ao `requirements.txt` |
+| `pip install pipdeptree` e `pipdeptree` | Mostra a árvore de dependências |
+| `pip install pip-audit` e `pip-audit` | Procura vulnerabilidades conhecidas nos pacotes instalados |
+| `pip install pipx` e `pipx install pacote` | Instala aplicativos de linha de comando em ambiente isolado |
+
+### Erros comuns
+
+- `externally-managed-environment` (Linux recente): o Python do sistema bloqueia o pip. Crie um `venv` e instale lá. `--break-system-packages` existe, mas não é recomendado.
+- `'pip' is not recognized` (Windows): use `py -m pip` ou `python -m pip`.
+- Erro de SSL em rede corporativa: configure o certificado ou o proxy da empresa antes de usar `--trusted-host`.
+
+## Python: executar scripts e opções da linha de comando
+
+O comando `python` aceita um arquivo, um módulo (`-m`) ou um trecho de código (`-c`), e várias opções que mudam como o interpretador se comporta.
+
+### Executar código
+
+| Comando | Para que serve |
+| --- | --- |
+| `python` | Abre o console interativo (REPL) |
+| `python script.py` | Roda um arquivo |
+| `python script.py arg1 arg2` | Roda passando argumentos (lidos em `sys.argv`) |
+| `python -c "print('oi')"` | Roda um trecho de código |
+| `python -m modulo` | Roda um módulo como script |
+| `python -m pacote` | Roda o `__main__.py` de um pacote |
+| `python -i script.py` | Roda o arquivo e deixa o console aberto depois |
+| `python -` | Lê o código da entrada padrão |
+| `pythonw script.py` | Windows: roda sem abrir janela de console (bom para robôs em segundo plano) |
+
+### Opções do interpretador
+
+| Opção | Para que serve |
+| --- | --- |
+| `python -u script.py` | Saída sem buffer, aparece na hora (útil em logs) |
+| `python -B script.py` | Não cria arquivos `.pyc` |
+| `python -O script.py` | Remove os `assert`; `-OO` remove também as docstrings |
+| `python -W ignore script.py` | Esconde os avisos (warnings) |
+| `python -X utf8 script.py` | Força o modo UTF-8 |
+| `python -X dev script.py` | Modo de desenvolvimento, com mais verificações |
+| `python -v script.py` | Mostra cada importação (diagnóstico) |
+| `python -E script.py` | Ignora as variáveis de ambiente `PYTHON*` |
+| `python -s script.py` | Não adiciona a pasta site-packages do usuário |
+| `python -S script.py` | Não importa o módulo `site` na partida |
+| `python -I script.py` | Modo isolado (junta `-E` e `-s`, ignora o diretório atual) |
+| `python -P script.py` | Não adiciona a pasta do script ao `sys.path` (Python 3.11 ou superior) |
+| `python -q` | Abre o console sem o banner de versão |
+| `python -h` | Ajuda completa das opções |
+
+### Módulos úteis com `-m`
+
+| Comando | Para que serve |
+| --- | --- |
+| `python -m http.server 8000` | Serve a pasta atual em `http://localhost:8000` |
+| `python -m json.tool arquivo.json` | Formata um JSON |
+| `python -m pdb script.py` | Roda no depurador |
+| `python -m timeit "sum(range(100))"` | Mede o tempo de uma expressão |
+| `python -m cProfile -s cumtime script.py` | Perfil de desempenho, ordenado por tempo acumulado |
+| `python -m unittest discover` | Roda os testes `unittest` da pasta |
+| `python -m doctest arquivo.py` | Roda os testes escritos nas docstrings |
+| `python -m py_compile arquivo.py` | Compila e acusa erro de sintaxe |
+| `python -m compileall .` | Compila todos os `.py` da pasta |
+| `python -m ensurepip --upgrade` | Instala ou atualiza o pip |
+| `python -m pydoc -b` | Abre a documentação no navegador |
+| `python -m pydoc len` | Mostra a documentação de um nome no terminal |
+| `python -m webbrowser -t https://pypi.org` | Abre uma URL no navegador |
+| `python -m idlelib` | Abre o editor IDLE |
+| `python -m calendar 2026` | Imprime o calendário do ano |
+| `python -m this` | Imprime o Zen do Python |
+
+### Variáveis de ambiente
+
+| Variável | Efeito |
+| --- | --- |
+| `PYTHONPATH` | Pastas extras onde o Python procura módulos |
+| `PYTHONUTF8=1` | Liga o modo UTF-8 |
+| `PYTHONIOENCODING=utf-8` | Define a codificação de entrada e saída |
+| `PYTHONDONTWRITEBYTECODE=1` | Não cria `.pyc` |
+| `PYTHONUNBUFFERED=1` | Saída sem buffer, como o `-u` |
+| `PYTHONSTARTUP` | Arquivo executado ao abrir o console interativo |
+| `PYTHONHOME` | Muda o local da instalação padrão |
+
+Para definir: `set VAR=valor` (cmd), `$env:VAR="valor"` (PowerShell) ou `export VAR=valor` (Linux/Mac).
+
+### No console interativo
+
+| Comando | Para que serve |
+| --- | --- |
+| `help(objeto)` | Mostra a documentação do objeto |
+| `dir(objeto)` | Lista atributos e métodos |
+| `type(x)` | Mostra o tipo |
+| `help('modules')` | Lista os módulos disponíveis |
+| `_` | Guarda o resultado da última expressão |
+| `exit()` ou `quit()` | Sai |
+| `Ctrl+Z` e Enter (Windows), `Ctrl+D` (Linux/Mac) | Sai pelo teclado |
+
+### Rodar em segundo plano e agendar
+
+| Sistema | Comando |
+| --- | --- |
+| Windows | `start /B pythonw script.py` |
+| Windows (agendar ao entrar no sistema) | `schtasks /create /tn "robo" /tr "pythonw C:\caminho\robo.py" /sc onlogon` |
+| Windows (parar) | `taskkill /F /IM python.exe` (ou `pythonw.exe`) |
+| Linux/Mac | `nohup python script.py > log.txt 2>&1 &` |
+| Linux/Mac (agendar) | `crontab -e` e a linha `0 8 * * 1-5 /usr/bin/python3 /home/usuario/script.py` |
+| Linux/Mac (parar) | `pkill -f script.py` |
+
+## Python: ferramentas de desenvolvimento
+
+Testes, formatação, depuração, empacotamento em `.exe`, notebooks e apps web têm cada um a sua ferramenta de linha de comando. Todas se instalam com `pip install`.
+
+### Testes com pytest
+
+| Comando | Para que serve |
+| --- | --- |
+| `pip install pytest` | Instala |
+| `pytest` | Roda todos os testes da pasta |
+| `pytest -v` | Mostra o nome de cada teste |
+| `pytest -q` | Saída resumida |
+| `pytest arquivo.py` | Roda os testes de um arquivo |
+| `pytest arquivo.py::test_nome` | Roda um teste específico |
+| `pytest -k "palavra"` | Roda os testes cujo nome contém a palavra |
+| `pytest -x` | Para na primeira falha |
+| `pytest --maxfail=3` | Para depois de 3 falhas |
+| `pytest -s` | Mostra os `print` dos testes |
+| `pytest --lf` | Roda só os que falharam na última vez |
+| `pytest -m marcador` | Roda só os testes com um marcador |
+| `pytest --pdb` | Abre o depurador quando um teste falha |
+| `pytest --cov=pacote` | Mede a cobertura (precisa do `pytest-cov`) |
+| `pytest -n auto` | Roda testes em paralelo (precisa do `pytest-xdist`) |
+
+### Formatação, lint e tipos
+
+| Comando | Para que serve |
+| --- | --- |
+| `black .` | Formata todos os arquivos da pasta |
+| `black --check .` | Só verifica, sem alterar |
+| `ruff check .` | Procura problemas de estilo e erros comuns |
+| `ruff check . --fix` | Corrige o que for possível automaticamente |
+| `ruff format .` | Formata o código (alternativa ao black) |
+| `isort .` | Ordena os imports |
+| `flake8` | Lint clássico |
+| `pylint modulo` | Lint mais rigoroso, com nota |
+| `mypy .` | Verifica os tipos (type hints) |
+
+### Depurador (pdb)
+
+Coloque `breakpoint()` no código ou rode `python -m pdb script.py`. Dentro do depurador:
+
+| Comando | Para que serve |
+| --- | --- |
+| `n` | Executa a próxima linha |
+| `s` | Entra na função da linha atual |
+| `c` | Continua até o próximo ponto de parada |
+| `l` | Mostra o código ao redor da linha atual |
+| `p variavel` | Mostra o valor de uma variável |
+| `b 25` | Cria um ponto de parada na linha 25 |
+| `q` | Sai |
+
+### Gerar executável com PyInstaller
+
+| Comando | Para que serve |
+| --- | --- |
+| `pip install pyinstaller` | Instala |
+| `pyinstaller --onefile script.py` | Gera um único `.exe` na pasta `dist` |
+| `pyinstaller --onefile --noconsole script.py` | Sem janela de console (para apps de interface e robôs) |
+| `pyinstaller --onefile --icon=icone.ico script.py` | Define o ícone |
+| `pyinstaller --name robo script.py` | Define o nome do executável |
+| `pyinstaller --add-data "arquivo.csv;." script.py` | Inclui um arquivo de dados (no Linux/Mac o separador é `:`) |
+| `pyinstaller --clean script.py` | Limpa o cache antes de gerar |
+| `pyinstaller script.spec` | Gera a partir do arquivo de configuração `.spec` |
+
+### Criar e publicar pacotes
+
+| Comando | Para que serve |
+| --- | --- |
+| `pip install build twine` | Instala as ferramentas |
+| `python -m build` | Gera os arquivos `.whl` e `.tar.gz` na pasta `dist` |
+| `twine check dist/*` | Valida os arquivos gerados |
+| `twine upload dist/*` | Publica no PyPI |
+| `twine upload --repository testpypi dist/*` | Publica no PyPI de testes |
+
+### Jupyter e IPython
+
+| Comando | Para que serve |
+| --- | --- |
+| `pip install jupyterlab` | Instala o JupyterLab |
+| `jupyter lab` | Abre o JupyterLab no navegador |
+| `jupyter notebook` | Abre o Notebook clássico |
+| `jupyter nbconvert --to html arquivo.ipynb` | Converte para HTML |
+| `jupyter nbconvert --to script arquivo.ipynb` | Converte para um `.py` |
+| `jupyter kernelspec list` | Lista os kernels instalados |
+| `python -m ipykernel install --user --name=meuenv` | Registra o ambiente atual como kernel do Jupyter |
+| `ipython` | Console interativo melhorado |
+
+### Streamlit
+
+| Comando | Para que serve |
+| --- | --- |
+| `pip install streamlit` | Instala |
+| `streamlit run app.py` | Roda o app em `http://localhost:8501` |
+| `streamlit run app.py --server.port 8502` | Roda em outra porta |
+| `streamlit run app.py --server.headless true` | Roda sem abrir o navegador |
+| `streamlit hello` | Abre o app de demonstração |
+| `streamlit cache clear` | Limpa o cache |
+| `streamlit config show` | Mostra a configuração ativa |
+| `streamlit --version` | Mostra a versão |
+
+## Java: JDK, versões e troca de versão
+
+Para programar em Java você precisa do JDK (que inclui o compilador `javac`); o JRE sozinho só executa programas. A versão ativa é a que aparece primeiro no `PATH`, e o `JAVA_HOME` diz às ferramentas (Maven, Gradle, IDEs) qual JDK usar. As versões LTS (suporte de longo prazo) são 8, 11, 17, 21 e 25.
+
+### Ver a versão e o caminho
+
+| Comando | Para que serve |
+| --- | --- |
+| `java -version` | Versão do Java que executa os programas |
+| `java --version` | Mesma coisa, formato novo (Java 9 ou superior) |
+| `javac -version` | Versão do compilador (confirma que é um JDK) |
+| `java -XshowSettings:properties -version` | Mostra todas as propriedades, incluindo `java.home` |
+| `java -XshowSettings:vm -version` | Mostra a memória padrão da JVM |
+| `where java` (Windows) | Lista os `java.exe` encontrados no PATH |
+| `which -a java` (Linux/Mac) | Lista os executáveis no PATH |
+| `echo %JAVA_HOME%` (cmd) | Mostra o `JAVA_HOME` |
+| `$env:JAVA_HOME` (PowerShell) | Mostra o `JAVA_HOME` |
+| `echo $JAVA_HOME` (Linux/Mac) | Mostra o `JAVA_HOME` |
+| `/usr/libexec/java_home -V` (macOS) | Lista todos os JDKs instalados |
+| `update-alternatives --list java` (Debian/Ubuntu) | Lista os Java instalados |
+
+### Instalar um JDK
+
+| Sistema | Comando |
+| --- | --- |
+| Windows (winget, Temurin) | `winget install EclipseAdoptium.Temurin.21.JDK` |
+| Windows (winget, Microsoft) | `winget install Microsoft.OpenJDK.21` |
+| Windows (Chocolatey) | `choco install temurin21` |
+| macOS (Homebrew) | `brew install --cask temurin@21` |
+| macOS (OpenJDK) | `brew install openjdk@21` |
+| Ubuntu/Debian | `sudo apt install openjdk-21-jdk` |
+| Ubuntu/Debian (procurar) | `apt search openjdk` |
+| Fedora | `sudo dnf install java-21-openjdk-devel` |
+
+No macOS, o `brew install openjdk@21` não registra o JDK no sistema. Para o `java_home` enxergar, rode `sudo ln -sfn /opt/homebrew/opt/openjdk@21/libexec/openjdk.jdk /Library/Java/JavaVirtualMachines/openjdk-21.jdk`.
+
+### Trocar de versão sem ferramenta extra
+
+| Sistema | Comando |
+| --- | --- |
+| Linux Debian/Ubuntu | `sudo update-alternatives --config java` e depois `sudo update-alternatives --config javac` |
+| Windows cmd (só nesta sessão) | `set JAVA_HOME=C:\Program Files\Eclipse Adoptium\jdk-21` e `set PATH=%JAVA_HOME%\bin;%PATH%` |
+| Windows PowerShell (só nesta sessão) | `$env:JAVA_HOME="C:\Program Files\Eclipse Adoptium\jdk-21"` e `$env:Path="$env:JAVA_HOME\bin;$env:Path"` |
+| Windows (permanente) | Painel de Controle, Variáveis de Ambiente: edite `JAVA_HOME` e coloque `%JAVA_HOME%\bin` no começo do `Path` |
+| macOS (sessão) | `export JAVA_HOME=$(/usr/libexec/java_home -v 21)` e `export PATH=$JAVA_HOME/bin:$PATH` |
+| Linux (sessão) | `export JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64` e `export PATH=$JAVA_HOME/bin:$PATH` |
+
+Para deixar permanente no Linux/Mac, coloque as linhas `export` em `~/.bashrc` ou `~/.zshrc`. Ajuste o caminho do JDK para o que existe na sua máquina.
+
+### SDKMAN (Linux, Mac, WSL e Git Bash)
+
+O SDKMAN instala e troca versões de Java, Maven, Gradle e outras ferramentas.
+
+| Comando | Para que serve |
+| --- | --- |
+| `curl -s "https://get.sdkman.io" \| bash` | Instala o SDKMAN |
+| `source "$HOME/.sdkman/bin/sdkman-init.sh"` | Ativa no terminal atual |
+| `sdk version` | Confere a instalação |
+| `sdk list java` | Lista as versões e fornecedores disponíveis |
+| `sdk install java 21.0.5-tem` | Instala (use o identificador mostrado em `sdk list java`) |
+| `sdk use java 17.0.13-tem` | Troca a versão só neste terminal |
+| `sdk default java 21.0.5-tem` | Define a versão padrão |
+| `sdk current java` | Mostra a versão em uso |
+| `sdk uninstall java 17.0.13-tem` | Remove uma versão |
+| `sdk install maven` | Instala o Maven |
+| `sdk install gradle` | Instala o Gradle |
+| `sdk update` | Atualiza a lista de versões disponíveis |
+| `sdk upgrade` | Lista e atualiza o que está desatualizado |
+| `sdk env init` | Cria o arquivo `.sdkmanrc` com as versões do projeto |
+| `sdk env` | Aplica as versões do `.sdkmanrc` na pasta atual |
+
+### jenv (alternativa no Linux e Mac)
+
+| Comando | Para que serve |
+| --- | --- |
+| `jenv add /caminho/do/jdk` | Registra um JDK já instalado |
+| `jenv versions` | Lista os JDKs registrados |
+| `jenv global 21` | Define a versão padrão |
+| `jenv local 17` | Fixa a versão na pasta (cria o arquivo `.java-version`) |
+| `jenv shell 11` | Define a versão só para este terminal |
+| `jenv enable-plugin export` | Faz o `jenv` definir o `JAVA_HOME` |
+
+## Java: compilar, executar e empacotar
+
+O fluxo básico é `javac` para compilar, `java` para executar e `jar` para empacotar. No classpath (`-cp`), o separador é `;` no Windows e `:` no Linux/Mac.
+
+### Compilar com javac
+
+| Comando | Para que serve |
+| --- | --- |
+| `javac Main.java` | Compila um arquivo e gera `Main.class` |
+| `javac -d out Main.java` | Gera os `.class` na pasta `out` |
+| `javac -d out @fontes.txt` | Compila a lista de arquivos do `fontes.txt` (um por linha) |
+| `find src -name "*.java" > fontes.txt` | Linux/Mac: gera a lista de todos os `.java` |
+| `dir /s /b src\*.java > fontes.txt` | Windows cmd: gera a lista de todos os `.java` |
+| `javac -cp "lib/*" -d out Main.java` | Compila usando os jars da pasta `lib` |
+| `javac -sourcepath src -d out src/pacote/Main.java` | Procura as outras classes na pasta `src` |
+| `javac -encoding UTF-8 Main.java` | Define a codificação do código-fonte |
+| `javac --release 17 Main.java` | Gera código compatível com o Java 17 |
+| `javac -Xlint:all Main.java` | Mostra todos os avisos |
+| `javac -Werror Main.java` | Trata avisos como erros |
+| `javac -g Main.java` | Inclui informação de depuração |
+| `javac -verbose Main.java` | Mostra o que o compilador está fazendo |
+| `javac --module-path mods -d out @fontes.txt` | Compila usando módulos |
+
+### Executar com java
+
+| Comando | Para que serve |
+| --- | --- |
+| `java Main` | Executa a classe `Main` (sem `.class` no nome) |
+| `java -cp out pacote.Main` | Executa uma classe que está num pacote |
+| `java -cp "out;lib/*" pacote.Main` | Windows: inclui os jars da pasta `lib` |
+| `java -cp "out:lib/*" pacote.Main` | Linux/Mac: inclui os jars da pasta `lib` |
+| `java Main.java` | Compila e executa o arquivo direto (Java 11 ou superior) |
+| `java -jar app.jar` | Executa um jar com `Main-Class` no manifesto |
+| `java -jar app.jar arg1 arg2` | Executa passando argumentos |
+| `java -Xms256m -Xmx1g -jar app.jar` | Define memória inicial e máxima do heap |
+| `java -Dchave=valor -jar app.jar` | Define uma propriedade do sistema |
+| `java -Dfile.encoding=UTF-8 -jar app.jar` | Força a codificação de arquivos |
+| `java -Duser.timezone=America/Sao_Paulo -jar app.jar` | Define o fuso horário |
+| `java -ea -jar app.jar` | Liga os `assert` |
+| `java --enable-preview --source 21 Main.java` | Usa recursos em pré-visualização (a versão deve ser a do JDK) |
+| `java --module-path mods -m modulo/pacote.Main` | Executa uma aplicação modular |
+| `java --list-modules` | Lista os módulos disponíveis |
+| `java --describe-module java.sql` | Descreve um módulo |
+| `java -verbose:class -jar app.jar` | Mostra cada classe carregada |
+| `java -XX:+PrintFlagsFinal -version` | Lista todas as flags da JVM com os valores atuais |
+| `java @argumentos.txt` | Lê as opções de um arquivo |
+| `java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005 -jar app.jar` | Abre a porta 5005 para depuração remota |
+
+A variável de ambiente `JAVA_TOOL_OPTIONS` (por exemplo `-Xmx512m`) é lida por toda JVM iniciada no terminal.
+
+### Empacotar com jar
+
+| Comando | Para que serve |
+| --- | --- |
+| `jar cf app.jar -C out .` | Cria um jar com o conteúdo da pasta `out` |
+| `jar cfe app.jar pacote.Main -C out .` | Cria o jar já definindo a classe principal |
+| `jar cfm app.jar MANIFEST.MF -C out .` | Cria o jar com um manifesto próprio |
+| `jar tf app.jar` | Lista o conteúdo |
+| `jar xf app.jar` | Extrai o conteúdo |
+| `jar uf app.jar arquivo.txt` | Atualiza ou adiciona um arquivo |
+| `jar --create --file app.jar --main-class pacote.Main -C out .` | Mesma criação com a sintaxe longa |
+
+Exemplo de `MANIFEST.MF` (a última linha precisa terminar com quebra de linha):
+
+```text
+Manifest-Version: 1.0
+Main-Class: pacote.Main
+Class-Path: lib/dependencia.jar
+```
+
+### jshell (console interativo, Java 9 ou superior)
+
+| Comando | Para que serve |
+| --- | --- |
+| `jshell` | Abre o console |
+| `jshell arquivo.jsh` | Executa um script e continua no console |
+| `jshell --class-path lib/x.jar` | Abre com um jar no classpath |
+| `/help` | Lista os comandos do jshell |
+| `/vars` | Lista as variáveis criadas |
+| `/methods` | Lista os métodos criados |
+| `/imports` | Lista os imports ativos |
+| `/list` | Lista tudo que foi digitado |
+| `/save arquivo.jsh` | Salva a sessão em um arquivo |
+| `/open arquivo.jsh` | Carrega um arquivo |
+| `/drop nome` | Apaga uma variável ou método |
+| `/reset` | Reinicia a sessão |
+| `/set feedback concise` | Reduz as mensagens de retorno |
+| `/exit` | Sai |
+
+### Documentação, dependências e runtime enxuto
+
+| Comando | Para que serve |
+| --- | --- |
+| `javadoc -d docs -sourcepath src -subpackages pacote` | Gera a documentação HTML na pasta `docs` |
+| `jdeps app.jar` | Mostra de quais pacotes e módulos o jar depende |
+| `jdeps --ignore-missing-deps --print-module-deps app.jar` | Lista os módulos do JDK que o app precisa |
+| `jlink --module-path "$JAVA_HOME/jmods" --add-modules java.base,java.sql --output runtime --strip-debug --no-header-files --no-man-pages` | Cria um runtime Java mínimo na pasta `runtime` |
+
+### jpackage (instalador nativo, Java 14 ou superior)
+
+| Comando | Para que serve |
+| --- | --- |
+| `jpackage --input target --name MeuApp --main-jar app.jar --main-class pacote.Main` | Gera um instalador para o sistema atual |
+| `jpackage ... --type app-image` | Gera só a pasta do aplicativo, sem instalador |
+| `jpackage ... --type exe` ou `--type msi` | Windows (precisa do WiX Toolset instalado) |
+| `jpackage ... --type dmg` ou `--type pkg` | macOS |
+| `jpackage ... --type deb` ou `--type rpm` | Linux |
+| `jpackage ... --app-version 1.0.0` | Define a versão do aplicativo |
+| `jpackage ... --icon icone.ico` | Define o ícone |
+| `jpackage ... --java-options "-Xmx512m"` | Passa opções para a JVM do aplicativo |
+| `jpackage ... --win-shortcut --win-menu` | Windows: cria atalho na área de trabalho e no menu |
+| `jpackage ... --dest saida` | Define a pasta de saída |
+
+## Java: Maven e Gradle
+
+Maven (arquivo `pom.xml`) e Gradle (`build.gradle` ou `build.gradle.kts`) compilam, testam, baixam dependências e empacotam o projeto. Em projetos reais, use o wrapper (`mvnw` ou `gradlew`), que baixa a versão certa da ferramenta e dispensa instalação.
+
+### Maven: ciclo de vida
+
+Cada fase executa também todas as anteriores: `package` roda `compile` e `test` antes.
+
+| Comando | Para que serve |
+| --- | --- |
+| `mvn -v` | Mostra a versão do Maven, do Java e do sistema |
+| `mvn validate` | Valida o `pom.xml` |
+| `mvn compile` | Compila o código para a pasta `target/classes` |
+| `mvn test` | Compila e roda os testes |
+| `mvn package` | Gera o `.jar` (ou `.war`) na pasta `target` |
+| `mvn verify` | Roda também os testes de integração |
+| `mvn install` | Copia o resultado para o repositório local (`~/.m2/repository`) |
+| `mvn deploy` | Publica no repositório remoto configurado |
+| `mvn clean` | Apaga a pasta `target` |
+| `mvn clean install` | Limpa e instala (o comando mais comum) |
+| `mvn clean package -DskipTests` | Empacota sem rodar os testes (ainda compila os testes) |
+| `mvn clean package -Dmaven.test.skip=true` | Empacota sem compilar nem rodar os testes |
+| `mvn test -Dtest=NomeTest` | Roda uma classe de teste |
+| `mvn test -Dtest=NomeTest#metodo` | Roda um único método de teste |
+
+### Maven: opções úteis
+
+| Opção | Para que serve |
+| --- | --- |
+| `-q` | Saída silenciosa, só erros |
+| `-X` | Saída de depuração, muito detalhada |
+| `-e` | Mostra a pilha completa dos erros |
+| `-o` | Modo offline, não acessa a rede |
+| `-U` | Força a atualização de snapshots e versões |
+| `-B` | Modo batch, sem cores nem perguntas (bom para CI) |
+| `-T 4` ou `-T 1C` | Compila em paralelo com 4 threads, ou 1 por núcleo |
+| `-pl modulo` | Roda só no módulo indicado |
+| `-pl modulo -am` | Roda no módulo e nos que ele depende |
+| `-rf :modulo` | Retoma o build a partir de um módulo |
+| `-P perfil` | Ativa um perfil do `pom.xml` |
+| `-f outro-pom.xml` | Usa outro arquivo POM |
+| `-Dpropriedade=valor` | Define uma propriedade |
+
+### Maven: plugins e utilidades
+
+| Comando | Para que serve |
+| --- | --- |
+| `mvn dependency:tree` | Mostra a árvore de dependências |
+| `mvn dependency:analyze` | Aponta dependências não usadas ou faltando |
+| `mvn dependency:copy-dependencies` | Copia os jars das dependências para `target/dependency` |
+| `mvn versions:display-dependency-updates` | Mostra dependências com versão nova |
+| `mvn versions:set -DnewVersion=1.2.0` | Muda a versão do projeto |
+| `mvn help:effective-pom` | Mostra o POM final, com tudo que foi herdado |
+| `mvn help:active-profiles` | Mostra os perfis ativos |
+| `mvn exec:java -Dexec.mainClass=pacote.Main` | Executa uma classe principal (plugin exec) |
+| `mvn spring-boot:run` | Sobe uma aplicação Spring Boot |
+| `mvn javadoc:javadoc` | Gera a documentação |
+| `mvn archetype:generate -DgroupId=com.exemplo -DartifactId=meuapp -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false` | Cria um projeto novo a partir de um modelo |
+| `mvn wrapper:wrapper` | Gera o `mvnw` e o `mvnw.cmd` no projeto |
+| `./mvnw clean install` (Linux/Mac) ou `mvnw.cmd clean install` (Windows) | Usa o wrapper no lugar do Maven instalado |
+
+### Gradle: tarefas principais
+
+| Comando | Para que serve |
+| --- | --- |
+| `gradle -v` | Mostra as versões do Gradle, do Java e do sistema |
+| `gradle init` | Cria um projeto novo (pergunta o tipo e a linguagem) |
+| `gradle tasks` | Lista as tarefas disponíveis (`--all` mostra todas) |
+| `gradle build` | Compila, testa e empacota (resultado em `build/libs`) |
+| `gradle clean` | Apaga a pasta `build` |
+| `gradle clean build` | Limpa e constrói |
+| `gradle assemble` | Gera os artefatos sem rodar os testes |
+| `gradle test` | Roda os testes |
+| `gradle test --tests "pacote.NomeTest"` | Roda uma classe de teste |
+| `gradle test --tests "*NomeTest.metodo"` | Roda um método de teste |
+| `gradle check` | Roda testes e verificações |
+| `gradle run` | Executa a classe principal (plugin `application`) |
+| `gradle jar` | Gera só o jar |
+| `gradle build -x test` | Constrói pulando a tarefa de testes |
+| `gradle bootRun` | Sobe uma aplicação Spring Boot |
+| `gradle bootJar` | Gera o jar executável do Spring Boot |
+| `gradle publishToMavenLocal` | Instala no repositório local do Maven |
+
+### Gradle: dependências, opções e wrapper
+
+| Comando | Para que serve |
+| --- | --- |
+| `gradle dependencies` | Mostra a árvore de dependências |
+| `gradle dependencies --configuration runtimeClasspath` | Mostra só as de execução |
+| `gradle dependencyInsight --dependency nome` | Explica por que uma dependência entrou |
+| `gradle projects` | Lista os subprojetos |
+| `gradle properties` | Lista as propriedades do projeto |
+| `gradle --refresh-dependencies` | Força o download das dependências de novo |
+| `gradle --offline` | Não usa a rede |
+| `gradle --info`, `--debug`, `--stacktrace`, `-q` | Níveis de detalhe da saída |
+| `gradle --parallel` | Executa projetos em paralelo |
+| `gradle --build-cache` | Reaproveita resultados de builds anteriores |
+| `gradle --continuous` ou `-t` | Roda de novo a cada alteração nos arquivos |
+| `gradle --scan` | Gera um relatório online do build |
+| `gradle --stop` | Para os daemons do Gradle em segundo plano |
+| `gradle --no-daemon` | Roda sem o daemon |
+| `gradle -Dorg.gradle.java.home="/caminho/do/jdk" build` | Usa um JDK específico |
+| `gradle wrapper --gradle-version 8.10` | Gera o wrapper fixando a versão |
+| `./gradlew build` (Linux/Mac) ou `gradlew.bat build` (Windows) | Usa o wrapper |
+
+### Equivalências entre Maven e Gradle
+
+| Ação | Maven | Gradle |
+| --- | --- | --- |
+| Arquivo de configuração | `pom.xml` | `build.gradle` ou `build.gradle.kts` |
+| Compilar | `mvn compile` | `gradle classes` |
+| Testar | `mvn test` | `gradle test` |
+| Empacotar | `mvn package` | `gradle build` |
+| Limpar | `mvn clean` | `gradle clean` |
+| Pular testes | `-DskipTests` | `-x test` |
+| Árvore de dependências | `mvn dependency:tree` | `gradle dependencies` |
+| Executar | `mvn exec:java` | `gradle run` |
+| Wrapper | `mvnw` | `gradlew` |
+
+## Java: diagnóstico, monitoramento e flags da JVM
+
+O JDK traz ferramentas para ver o que uma aplicação Java está fazendo: `jps` e `jcmd` encontram o processo (o PID), e as demais mostram threads, memória e coleta de lixo. Nos exemplos, `PID` é o número do processo.
+
+### Processos, threads e memória
+
+| Comando | Para que serve |
+| --- | --- |
+| `jps -lv` | Lista os processos Java com a classe ou jar e as opções |
+| `jcmd` | Lista os processos Java (sem argumentos) |
+| `jcmd PID help` | Lista o que dá para pedir àquele processo |
+| `jcmd PID VM.version` | Versão da JVM do processo |
+| `jcmd PID VM.flags` | Flags da JVM em uso |
+| `jcmd PID VM.system_properties` | Propriedades do sistema do processo |
+| `jcmd PID Thread.print` | Imprime as threads (thread dump) |
+| `jcmd PID GC.heap_info` | Resumo do uso do heap |
+| `jcmd PID GC.run` | Pede uma coleta de lixo |
+| `jcmd PID GC.heap_dump arquivo.hprof` | Gera um heap dump |
+| `jstack PID` | Imprime as threads, útil para achar travamentos |
+| `jstack -l PID` | Inclui informações de locks |
+| `jmap -histo PID` | Histograma de objetos por classe |
+| `jmap -histo:live PID` | Mesmo histograma, só com objetos vivos |
+| `jmap -dump:live,format=b,file=heap.hprof PID` | Gera um heap dump |
+| `jstat -gcutil PID 1000 10` | Uso de memória e GC a cada 1 segundo, 10 vezes |
+| `jstat -gc PID 1000` | Valores absolutos de memória e GC, a cada 1 segundo |
+| `jstat -class PID` | Quantidade de classes carregadas |
+| `jinfo -flags PID` | Flags da JVM |
+| `jinfo -sysprops PID` | Propriedades do sistema |
+| `kill -3 PID` (Linux/Mac) | Imprime o thread dump na saída do processo |
+| `Ctrl+Break` (Windows) | Imprime o thread dump no console onde o programa roda |
+
+Analise arquivos `.hprof` no Eclipse MAT, VisualVM ou IntelliJ.
+
+### Flags da JVM: memória e coleta de lixo
+
+| Flag | Para que serve |
+| --- | --- |
+| `-Xms512m` | Tamanho inicial do heap |
+| `-Xmx2g` | Tamanho máximo do heap |
+| `-Xss1m` | Tamanho da pilha de cada thread |
+| `-XX:MaxMetaspaceSize=256m` | Limite do metaspace (metadados de classes) |
+| `-XX:MaxRAMPercentage=75` | Heap máximo como porcentagem da memória (bom em containers) |
+| `-XX:+UseG1GC` | Coletor G1 (padrão nas versões atuais) |
+| `-XX:+UseZGC` | Coletor ZGC, de baixa latência |
+| `-XX:+UseParallelGC` | Coletor Parallel, focado em vazão |
+| `-XX:+UseSerialGC` | Coletor Serial, para apps pequenos |
+| `-XX:+HeapDumpOnOutOfMemoryError` | Gera um heap dump quando faltar memória |
+| `-XX:HeapDumpPath=/tmp/` | Pasta onde o heap dump é salvo |
+| `-XX:+ExitOnOutOfMemoryError` | Encerra a JVM ao faltar memória |
+| `-Xlog:gc*:file=gc.log` | Grava o log de GC em arquivo (Java 9 ou superior) |
+| `-XX:+PrintFlagsFinal` | Lista todas as flags com os valores finais |
+| `-XX:StartFlightRecording=duration=60s,filename=rec.jfr` | Grava um perfil com o Java Flight Recorder |
+| `-XX:NativeMemoryTracking=summary` | Liga o rastreio de memória nativa (consulte com `jcmd PID VM.native_memory summary`) |
+
+### Flight Recorder, bytecode e depuração
+
+| Comando | Para que serve |
+| --- | --- |
+| `jcmd PID JFR.start duration=60s filename=rec.jfr` | Inicia uma gravação em um processo em execução |
+| `jfr summary rec.jfr` | Resume uma gravação |
+| `jfr print --events jdk.GarbageCollection rec.jfr` | Imprime eventos de um tipo |
+| `jconsole` | Abre o monitor gráfico de JVM |
+| `javap -c Classe` | Mostra o bytecode de uma classe |
+| `javap -p -s Classe` | Lista membros (inclusive privados) e assinaturas |
+| `javap -v Classe` | Mostra tudo sobre a classe, incluindo versão do bytecode |
+| `jdb Main` | Abre o depurador de linha de comando |
+
+### Certificados e segurança (keytool)
+
+| Comando | Para que serve |
+| --- | --- |
+| `keytool -genkeypair -alias minha -keyalg RSA -keysize 2048 -keystore chaves.jks -validity 365` | Cria um par de chaves num keystore |
+| `keytool -list -keystore chaves.jks` | Lista o conteúdo do keystore |
+| `keytool -importcert -alias ca -file cert.crt -keystore chaves.jks` | Importa um certificado |
+| `keytool -exportcert -alias minha -keystore chaves.jks -file cert.crt` | Exporta um certificado |
+| `keytool -delete -alias ca -keystore chaves.jks` | Remove uma entrada |
+| `keytool -list -cacerts` | Lista as autoridades confiáveis do Java (a senha padrão é `changeit`) |
+| `keytool -importcert -trustcacerts -alias empresa -file cert.crt -cacerts` | Adiciona um certificado às autoridades confiáveis do Java (útil em rede corporativa) |
+| `jarsigner -verify app.jar` | Verifica a assinatura de um jar |
+
+### Servidor web simples
+
+| Comando | Para que serve |
+| --- | --- |
+| `jwebserver` | Serve a pasta atual em `http://localhost:8000` (Java 18 ou superior) |
+| `jwebserver -p 9000 -d /caminho/da/pasta` | Escolhe a porta e a pasta |
+
+## R: instalação, versões e execução
+
+O R roda de três jeitos: no console interativo (`R`), em scripts (`Rscript`) e em lote (`R CMD BATCH`). Diferente do Python, o R não tem um `venv` embutido: para ter várias versões use o `rig`, e para isolar pacotes por projeto use o `renv` (próxima seção).
+
+### Instalar o R
+
+| Sistema | Comando |
+| --- | --- |
+| Windows (winget) | `winget install RProject.R` |
+| Windows (ferramentas de compilação, Rtools) | `winget install RProject.Rtools` |
+| macOS (Homebrew) | `brew install --cask r` |
+| Ubuntu/Debian | `sudo apt install r-base r-base-dev` |
+| Fedora | `sudo dnf install R` |
+| conda | `conda install -c conda-forge r-base` |
+| Windows (atualizar pelo console do R) | `install.packages("installr")` e depois `installr::updateR()` |
+
+O Ubuntu costuma trazer uma versão antiga do R. Para a mais recente, adicione o repositório oficial do CRAN seguindo as instruções de cloud.r-project.org/bin/linux/ubuntu.
+
+### Várias versões do R com o rig
+
+O `rig` (R Installation Manager) instala e troca versões do R no Windows, Mac e Linux.
+
+| Comando | Para que serve |
+| --- | --- |
+| `winget install posit.rig` | Instala o rig no Windows |
+| `brew tap r-lib/rig` e `brew install --cask rig` | Instala o rig no macOS |
+| `rig available` | Lista as versões do R disponíveis |
+| `rig add release` | Instala a versão mais recente |
+| `rig add 4.3` | Instala a versão 4.3 mais recente |
+| `rig list` | Lista as versões instaladas |
+| `rig default 4.3` | Define a versão padrão do sistema |
+| `rig run` | Abre o R ou roda um script (rode rig run --help para ver como escolher a versão) |
+| `rig rm 4.2` | Remove uma versão |
+
+### Ver a versão e o ambiente
+
+| Comando | Para que serve |
+| --- | --- |
+| `R --version` | Versão do R (no terminal) |
+| `Rscript --version` | Versão do Rscript |
+| `where R` (Windows) ou `which R` (Linux/Mac) | Caminho do executável |
+| `R RHOME` | Pasta de instalação do R |
+| `R.version.string` | Versão, dentro do console |
+| `getRversion()` | Versão como objeto comparável (`getRversion() >= "4.3.0"`) |
+| `R.version` | Detalhes completos da versão e da plataforma |
+| `sessionInfo()` | Versão, sistema e pacotes carregados |
+| `packageVersion("dplyr")` | Versão de um pacote instalado |
+| `.libPaths()` | Pastas onde o R procura pacotes |
+| `Sys.getenv("R_HOME")` | Pasta de instalação, pelo console |
+| `Sys.info()` | Dados do sistema operacional |
+
+### Executar com R e Rscript
+
+| Comando | Para que serve |
+| --- | --- |
+| `R` | Abre o console interativo |
+| `R --vanilla` | Abre sem ler arquivos de configuração nem restaurar sessão |
+| `R --quiet` ou `R -q` | Abre sem a mensagem de boas-vindas |
+| `R --no-save --no-restore` | Não salva nem restaura o workspace |
+| `R -e "print(1 + 1)"` | Executa uma expressão e sai |
+| `R -f script.R` | Executa um arquivo |
+| `R CMD BATCH script.R saida.Rout` | Executa em lote e grava a saída em `saida.Rout` |
+| `Rscript script.R` | Executa um script (o jeito mais comum) |
+| `Rscript script.R arg1 arg2` | Executa passando argumentos |
+| `Rscript -e "print(1 + 1)"` | Executa uma expressão |
+| `Rscript --vanilla script.R` | Executa sem arquivos de configuração |
+| `Rscript -e "rmarkdown::render('relatorio.Rmd')"` | Gera um relatório R Markdown |
+| `quarto render relatorio.qmd` | Gera um documento Quarto |
+
+Dentro do script, os argumentos são lidos com `args <- commandArgs(trailingOnly = TRUE)`.
+
+### Ferramentas de linha de comando `R CMD`
+
+| Comando | Para que serve |
+| --- | --- |
+| `R CMD INSTALL pacote_1.0.tar.gz` | Instala um pacote a partir de um arquivo ou pasta |
+| `R CMD INSTALL --library=caminho pacote_1.0.tar.gz` | Instala numa pasta específica |
+| `R CMD REMOVE pacote` | Remove um pacote |
+| `R CMD build pasta_do_pacote` | Gera o arquivo `.tar.gz` do seu pacote |
+| `R CMD check pacote_1.0.tar.gz` | Valida o pacote (`--as-cran` aplica as regras do CRAN) |
+| `R CMD config --all` | Mostra a configuração de compilação |
+| `R CMD SHLIB arquivo.c` | Compila código C para usar no R |
+| `R CMD Rd2pdf pasta_do_pacote` | Gera o manual do pacote em PDF |
+
+### Variáveis de ambiente e arquivos de configuração
+
+| Item | Para que serve |
+| --- | --- |
+| `R_HOME` | Pasta de instalação do R |
+| `R_LIBS_USER` | Pasta de pacotes do usuário |
+| `R_LIBS` | Pastas extras de pacotes |
+| `R_PROFILE_USER` | Caminho do arquivo de inicialização do usuário |
+| `R_ENVIRON_USER` | Caminho do arquivo de variáveis do usuário |
+| `.Rprofile` | Código executado ao abrir o R (na pasta do projeto ou do usuário) |
+| `.Renviron` | Variáveis de ambiente lidas ao abrir o R (chaves, proxies, `R_LIBS_USER`) |
+| `usethis::edit_r_profile()` | Abre o `.Rprofile` para edição |
+| `usethis::edit_r_environ()` | Abre o `.Renviron` para edição |
+
+## R: pacotes, ambientes e comandos do console
+
+No R, os pacotes são instalados e atualizados por funções dentro do próprio console (ou com `Rscript -e`). O `renv` faz o papel do `venv` + `requirements.txt`: cada projeto ganha a sua biblioteca de pacotes e um arquivo `renv.lock` com as versões.
+
+### Pacotes do CRAN
+
+| Comando | Para que serve |
+| --- | --- |
+| `install.packages("dplyr")` | Instala um pacote |
+| `install.packages(c("dplyr", "ggplot2"))` | Instala vários |
+| `install.packages("dplyr", dependencies = TRUE)` | Instala também os pacotes sugeridos |
+| `install.packages("dplyr", lib = "C:/minha_lib")` | Instala numa pasta específica |
+| `install.packages("arquivo.tar.gz", repos = NULL, type = "source")` | Instala a partir de um arquivo local |
+| `options(repos = c(CRAN = "https://cloud.r-project.org"))` | Define o espelho (mirror) do CRAN |
+| `update.packages()` | Atualiza os pacotes, perguntando um a um |
+| `update.packages(ask = FALSE)` | Atualiza tudo sem perguntar |
+| `old.packages()` | Lista os pacotes com versão nova |
+| `remove.packages("dplyr")` | Remove um pacote |
+| `library(dplyr)` | Carrega o pacote (dá erro se não existir) |
+| `require(dplyr)` | Carrega e devolve `TRUE` ou `FALSE` |
+| `requireNamespace("dplyr", quietly = TRUE)` | Testa se o pacote está instalado, sem carregar |
+| `dplyr::filter(df, x > 1)` | Usa uma função sem carregar o pacote inteiro |
+| `detach("package:dplyr", unload = TRUE)` | Descarrega um pacote |
+| `.libPaths()` | Mostra as pastas de bibliotecas |
+| `.libPaths("C:/minha_lib")` | Adiciona uma pasta de bibliotecas na sessão |
+
+### Consultar pacotes
+
+| Comando | Para que serve |
+| --- | --- |
+| `installed.packages()` | Tabela de todos os pacotes instalados |
+| `"dplyr" %in% rownames(installed.packages())` | Testa se um pacote está instalado |
+| `packageVersion("dplyr")` | Versão instalada |
+| `packageDescription("dplyr")` | Descrição, dependências e autor |
+| `help(package = "dplyr")` | Índice de ajuda do pacote |
+| `browseVignettes("dplyr")` | Abre os tutoriais do pacote no navegador |
+| `search()` | Lista o que está carregado na sessão |
+| `loadedNamespaces()` | Lista os pacotes carregados |
+| `available.packages()` | Lista tudo que o CRAN oferece |
+
+### GitHub, versões antigas, Bioconductor e pak
+
+| Comando | Para que serve |
+| --- | --- |
+| `install.packages("remotes")` | Instala o pacote `remotes` |
+| `remotes::install_github("usuario/repo")` | Instala direto do GitHub |
+| `remotes::install_github("usuario/repo@v1.2")` | Instala uma tag, branch ou commit |
+| `remotes::install_version("dplyr", version = "1.0.10")` | Instala uma versão específica do CRAN |
+| `remotes::install_local("pasta_do_pacote")` | Instala de uma pasta local |
+| `install.packages("BiocManager")` | Instala o gerenciador do Bioconductor |
+| `BiocManager::install("Biostrings")` | Instala um pacote do Bioconductor |
+| `BiocManager::valid()` | Confere se as versões do Bioconductor estão coerentes |
+| `install.packages("pak")` | Instala o `pak`, instalador mais rápido |
+| `pak::pkg_install("dplyr")` | Instala do CRAN, GitHub (`usuario/repo`) ou Bioconductor |
+| `pak::pkg_deps_tree("dplyr")` | Mostra a árvore de dependências |
+
+### Ambientes por projeto com renv
+
+| Comando | Para que serve |
+| --- | --- |
+| `install.packages("renv")` | Instala o renv |
+| `renv::init()` | Cria a biblioteca isolada do projeto e o `renv.lock` |
+| `renv::install("dplyr")` | Instala um pacote na biblioteca do projeto |
+| `renv::install("dplyr@1.1.4")` | Instala uma versão específica |
+| `renv::snapshot()` | Grava no `renv.lock` as versões em uso |
+| `renv::restore()` | Reinstala as versões do `renv.lock` (como o `pip install -r`) |
+| `renv::status()` | Mostra se o projeto e o `renv.lock` estão sincronizados |
+| `renv::update()` | Atualiza os pacotes do projeto |
+| `renv::remove("dplyr")` | Remove um pacote do projeto |
+| `renv::clean()` | Limpa pacotes e arquivos não usados |
+| `renv::deactivate()` | Desliga o renv no projeto |
+| `renv::activate()` | Liga o renv de novo |
+
+O `renv` registra a versão do R no `renv.lock`, mas não instala o R. Para isso use o `rig`.
+
+### Desenvolver pacotes (devtools e usethis)
+
+| Comando | Para que serve |
+| --- | --- |
+| `install.packages(c("devtools", "usethis"))` | Instala as ferramentas |
+| `usethis::create_package("C:/pasta/meupacote")` | Cria a estrutura de um pacote |
+| `usethis::use_package("dplyr")` | Registra uma dependência |
+| `usethis::use_git()` | Inicia o repositório Git |
+| `usethis::use_test("nome")` | Cria um arquivo de teste |
+| `devtools::load_all()` | Carrega o pacote em desenvolvimento sem instalar |
+| `devtools::document()` | Gera a documentação a partir dos comentários roxygen |
+| `devtools::test()` | Roda os testes |
+| `devtools::check()` | Roda a validação completa (como o `R CMD check`) |
+| `devtools::build()` | Gera o `.tar.gz` |
+| `devtools::install()` | Instala o pacote em desenvolvimento |
+
+### Console: arquivos e ambiente de trabalho
+
+| Comando | Para que serve |
+| --- | --- |
+| `getwd()` | Mostra a pasta de trabalho |
+| `setwd("C:/pasta")` | Muda a pasta de trabalho (use `/`, não `\`) |
+| `list.files()` | Lista os arquivos da pasta |
+| `list.files(pattern = "\\.csv$")` | Lista só os arquivos `.csv` |
+| `dir.create("pasta")` | Cria uma pasta |
+| `file.exists("arquivo.csv")` | Testa se um arquivo existe |
+| `file.copy("a.csv", "b.csv")` | Copia um arquivo |
+| `file.rename("a.csv", "b.csv")` | Renomeia um arquivo |
+| `file.remove("a.csv")` | Apaga um arquivo |
+| `source("script.R")` | Executa outro script |
+| `ls()` | Lista os objetos da sessão |
+| `rm(x)` | Remove um objeto |
+| `rm(list = ls())` | Remove todos os objetos da sessão |
+| `Sys.getenv("VAR")` | Lê uma variável de ambiente |
+| `Sys.setenv(VAR = "valor")` | Define uma variável de ambiente na sessão |
+| `Sys.Date()` e `Sys.time()` | Data e hora atuais |
+| `options(scipen = 999)` | Evita a notação científica nos números |
+| `set.seed(123)` | Fixa a semente aleatória para resultados repetíveis |
+| `q()` ou `quit(save = "no")` | Sai do R sem salvar a sessão |
+
+### Console: inspecionar objetos e pedir ajuda
+
+| Comando | Para que serve |
+| --- | --- |
+| `str(x)` | Estrutura do objeto |
+| `summary(x)` | Resumo estatístico |
+| `head(x)` e `tail(x)` | Primeiras e últimas linhas |
+| `class(x)` e `typeof(x)` | Classe e tipo de armazenamento |
+| `names(x)` | Nomes dos elementos ou colunas |
+| `dim(x)`, `nrow(x)`, `ncol(x)` | Dimensões |
+| `?mean` ou `help(mean)` | Ajuda de uma função |
+| `??regressao` ou `help.search("regressao")` | Busca na ajuda por um termo |
+| `example(mean)` | Roda os exemplos de uma função |
+| `args(mean)` | Mostra os argumentos de uma função |
+| `apropos("mean")` | Procura funções pelo nome |
+
+### Console: ler e salvar dados
+
+| Comando | Para que serve |
+| --- | --- |
+| `read.csv("arquivo.csv")` | Lê CSV com vírgula como separador |
+| `read.csv2("arquivo.csv")` | Lê CSV no padrão brasileiro (ponto e vírgula, vírgula decimal) |
+| `write.csv(df, "saida.csv", row.names = FALSE)` | Grava CSV |
+| `write.csv2(df, "saida.csv", row.names = FALSE)` | Grava CSV no padrão brasileiro |
+| `readr::read_csv("arquivo.csv")` | Leitura mais rápida (pacote `readr`) |
+| `data.table::fread("arquivo.csv")` | Leitura muito rápida de arquivos grandes |
+| `readxl::read_excel("arquivo.xlsx", sheet = 1)` | Lê uma planilha Excel |
+| `writexl::write_xlsx(df, "saida.xlsx")` | Grava um Excel |
+| `saveRDS(x, "x.rds")` e `readRDS("x.rds")` | Salva e lê um objeto R |
+| `save(x, y, file = "dados.RData")` e `load("dados.RData")` | Salva e carrega vários objetos |
+
+### Console: tempo e depuração
+
+| Comando | Para que serve |
+| --- | --- |
+| `system.time(expr)` | Mede o tempo de uma expressão |
+| `traceback()` | Mostra onde ocorreu o último erro |
+| `browser()` | Pausa o código no ponto e abre o depurador |
+| `debug(minha_funcao)` e `undebug(minha_funcao)` | Liga e desliga o depurador numa função |
+| `options(error = recover)` | Abre o depurador quando ocorre um erro |
+
+## JavaScript: Node.js, versões e instalação
+
+JavaScript roda no navegador e no Node.js. Os comandos abaixo são do Node.js e dos gerenciadores de versão: `nvm`, `fnm` e `Volta`. As versões pares do Node (22, 24 e assim por diante) viram LTS, a linha de suporte longo recomendada para uso no dia a dia.
+
+### Ver a versão e o caminho
+
+| Comando | Para que serve |
+| --- | --- |
+| `node --version` ou `node -v` | Versão do Node.js |
+| `npm --version` ou `npm -v` | Versão do npm |
+| `npx --version` | Versão do npx |
+| `where node` (Windows) | Lista os `node.exe` encontrados no PATH |
+| `which -a node` (Linux/Mac) | Lista os executáveis no PATH |
+| `node -p "process.execPath"` | Caminho do executável que está rodando |
+| `node -p "process.versions"` | Versões do Node, do motor V8 e das bibliotecas internas |
+| `npm root -g` | Pasta dos pacotes instalados globalmente |
+| `npm config get prefix` | Pasta base das instalações globais |
+
+### Instalar o Node.js
+
+| Sistema | Comando |
+| --- | --- |
+| Windows (winget) | `winget install OpenJS.NodeJS.LTS` |
+| Windows (Chocolatey) | `choco install nodejs-lts` |
+| macOS (Homebrew) | `brew install node` |
+| macOS (atualizar) | `brew upgrade node` |
+| Ubuntu/Debian | `sudo apt install nodejs npm` |
+| Fedora | `sudo dnf install nodejs` |
+
+Os repositórios do Linux costumam trazer uma versão antiga. Para escolher a versão, use um dos gerenciadores abaixo.
+
+### nvm (Linux, Mac e WSL)
+
+O comando de instalação muda a cada versão: copie o mais recente do README em github.com/nvm-sh/nvm.
+
+| Comando | Para que serve |
+| --- | --- |
+| `nvm --version` | Confere a instalação |
+| `nvm ls-remote --lts` | Lista as versões LTS disponíveis |
+| `nvm install --lts` | Instala a versão LTS mais recente |
+| `nvm install 22` | Instala a versão 22 mais recente |
+| `nvm install node` | Instala a versão mais nova (Current) |
+| `nvm use 22` | Troca a versão neste terminal |
+| `nvm use --lts` | Usa a LTS neste terminal |
+| `nvm alias default 22` | Define a versão padrão dos novos terminais |
+| `nvm ls` | Lista as versões instaladas |
+| `nvm current` | Mostra a versão em uso |
+| `nvm which 22` | Caminho do executável de uma versão |
+| `nvm uninstall 20` | Remove uma versão |
+| `echo 22 > .nvmrc` e depois `nvm use` | Fixa a versão no projeto e usa a versão do arquivo |
+
+### nvm-windows
+
+É outro programa, com comandos parecidos mas não idênticos aos do nvm.
+
+| Comando | Para que serve |
+| --- | --- |
+| `nvm list available` | Lista as versões disponíveis |
+| `nvm install lts` | Instala a versão LTS mais recente |
+| `nvm install 22.11.0` | Instala uma versão exata |
+| `nvm use 22.11.0` | Troca a versão |
+| `nvm list` | Lista as versões instaladas |
+| `nvm uninstall 22.11.0` | Remove uma versão |
+
+### fnm, Volta e Corepack
+
+| Comando | Para que serve |
+| --- | --- |
+| `fnm list-remote` | Lista as versões disponíveis no fnm |
+| `fnm install --lts` | Instala a LTS mais recente |
+| `fnm use 22` | Troca a versão |
+| `fnm default 22` | Define a versão padrão |
+| `fnm list` | Lista as versões instaladas |
+| `volta install node@22` | Instala e define a versão no Volta |
+| `volta pin node@22` | Fixa a versão no `package.json` do projeto |
+| `volta list` | Mostra o que está instalado |
+| `corepack enable` | Liga o pnpm e o yarn que vêm junto com o Node |
+| `corepack prepare pnpm@latest --activate` | Prepara e ativa uma versão do pnpm |
+
+## JavaScript: npm, pnpm e yarn
+
+O `npm` vem com o Node.js e instala os pacotes na pasta `node_modules` do projeto. O arquivo `package.json` lista as dependências e `package-lock.json` fixa as versões exatas.
+
+### npm: criar projeto e instalar pacotes
+
+| Comando | Para que serve |
+| --- | --- |
+| `npm init` | Cria o `package.json` fazendo perguntas |
+| `npm init -y` | Cria o `package.json` com os valores padrão |
+| `npm install` ou `npm i` | Instala tudo que está no `package.json` |
+| `npm install pacote` | Instala e registra como dependência |
+| `npm install pacote@1.2.3` | Instala uma versão exata |
+| `npm install pacote@latest` | Instala a versão mais recente |
+| `npm install -D pacote` | Instala como dependência de desenvolvimento (`--save-dev`) |
+| `npm install -g pacote` | Instala globalmente (`--global`) |
+| `npm install -E pacote` | Registra a versão exata, sem o `^` (`--save-exact`) |
+| `npm install usuario/repo` | Instala direto de um repositório do GitHub |
+| `npm ci` | Instalação limpa a partir do `package-lock.json` (ideal para CI) |
+| `npm install --omit=dev` | Instala só as dependências de produção |
+| `npm install --legacy-peer-deps` | Ignora conflitos de dependências entre pacotes (peer deps) |
+| `npm uninstall pacote` | Remove um pacote |
+| `npm update` | Atualiza dentro das faixas do `package.json` |
+| `npm update pacote` | Atualiza um pacote |
+
+### npm: consultar, auditar e publicar
+
+| Comando | Para que serve |
+| --- | --- |
+| `npm outdated` | Lista os pacotes que têm versão nova |
+| `npm ls --depth=0` | Lista os pacotes do projeto, sem as dependências deles |
+| `npm ls -g --depth=0` | Lista os pacotes globais |
+| `npm ls pacote` | Mostra onde um pacote aparece na árvore |
+| `npm explain pacote` | Explica por que um pacote foi instalado |
+| `npm view pacote version` | Mostra a versão mais recente no registro |
+| `npm view pacote versions` | Lista todas as versões publicadas |
+| `npm search termo` | Procura pacotes no registro |
+| `npm audit` | Procura vulnerabilidades conhecidas |
+| `npm audit fix` | Corrige o que for possível automaticamente |
+| `npm dedupe` | Reduz pacotes duplicados |
+| `npm prune` | Remove pacotes que não estão no `package.json` |
+| `npm link` | Liga o pacote local para testar em outro projeto |
+| `npm pack` | Gera o arquivo `.tgz` que seria publicado |
+| `npm version patch` | Sobe a versão do projeto (também `minor` e `major`) |
+| `npm login` e `npm whoami` | Entra no registro e mostra o usuário |
+| `npm publish` | Publica o pacote no npm |
+| `npm doctor` | Verifica o ambiente do npm |
+| `npm help install` | Ajuda de um comando |
+
+### npm: configuração, cache e rede
+
+| Comando | Para que serve |
+| --- | --- |
+| `npm config list` | Mostra a configuração ativa |
+| `npm config get registry` | Mostra o registro em uso |
+| `npm config set registry https://registry.npmjs.org/` | Define o registro |
+| `npm config set proxy http://usuario:senha@host:porta` | Define o proxy HTTP (rede corporativa) |
+| `npm config set https-proxy http://usuario:senha@host:porta` | Define o proxy HTTPS (rede corporativa) |
+| `npm config delete proxy` | Remove o proxy |
+| `npm config set strict-ssl false` | Desliga a checagem de certificado SSL (use só como último recurso) |
+| `npm config set cafile caminho/certificado.pem` | Usa o certificado da empresa |
+| `npm cache verify` | Confere o cache |
+| `npm cache clean --force` | Esvazia o cache |
+
+### Scripts e npx
+
+| Comando | Para que serve |
+| --- | --- |
+| `npm run` | Lista os scripts do `package.json` |
+| `npm run nome` | Executa um script |
+| `npm start` | Executa o script `start` |
+| `npm test` ou `npm t` | Executa o script `test` |
+| `npm run build` | Executa o script `build` |
+| `npm run dev -- --port 4000` | Passa argumentos para o script (o `--` separa) |
+| `npx pacote` | Executa um pacote sem instalar |
+| `npx pacote@1.2.3` | Executa uma versão específica |
+| `npm exec pacote` | Mesma função do `npx`, com a sintaxe do npm |
+
+Exemplo da seção `scripts` do `package.json`:
+
+```text
+"scripts": {
+  "dev": "vite",
+  "build": "vite build",
+  "test": "vitest run",
+  "lint": "eslint ."
+}
+```
+
+### Equivalências entre npm, pnpm, yarn e bun
+
+| Ação | npm | pnpm | yarn | bun |
+| --- | --- | --- | --- | --- |
+| Instalar tudo | `npm install` | `pnpm install` | `yarn install` | `bun install` |
+| Adicionar pacote | `npm install pacote` | `pnpm add pacote` | `yarn add pacote` | `bun add pacote` |
+| Adicionar para desenvolvimento | `npm install -D pacote` | `pnpm add -D pacote` | `yarn add -D pacote` | `bun add -d pacote` |
+| Remover pacote | `npm uninstall pacote` | `pnpm remove pacote` | `yarn remove pacote` | `bun remove pacote` |
+| Atualizar | `npm update` | `pnpm update` | `yarn upgrade` | `bun update` |
+| Rodar script | `npm run dev` | `pnpm run dev` | `yarn dev` | `bun run dev` |
+| Executar sem instalar | `npx pacote` | `pnpm dlx pacote` | `yarn dlx pacote` | `bunx pacote` |
+| Arquivo de lock | `package-lock.json` | `pnpm-lock.yaml` | `yarn.lock` | `bun.lock` |
+
+## JavaScript: executar, depurar e testar
+
+O comando `node` roda um arquivo, uma expressão ou o console interativo (REPL). As opções começam com `--` e mudam como o programa executa.
+
+### Executar com Node
+
+| Comando | Para que serve |
+| --- | --- |
+| `node` | Abre o console interativo (REPL) |
+| `node arquivo.js` | Executa um arquivo |
+| `node arquivo.js arg1 arg2` | Executa passando argumentos (lidos em `process.argv`) |
+| `node -e "console.log(1 + 1)"` | Executa um trecho de código |
+| `node -p "1 + 1"` | Executa e imprime o resultado |
+| `node --watch arquivo.js` | Reinicia o programa quando o arquivo muda |
+| `node --env-file=.env arquivo.js` | Carrega as variáveis do arquivo `.env` (Node 20.6 ou superior) |
+| `node --run dev` | Executa um script do `package.json` sem passar pelo npm (Node 22 ou superior) |
+| `node --test` | Roda os testes com o executor nativo |
+| `node --check arquivo.js` | Só verifica erros de sintaxe |
+| `node -r dotenv/config arquivo.js` | Carrega um módulo antes de executar |
+| `node arquivo.mjs` | Executa como módulo ES (com `import` e `export`) |
+| `node arquivo.ts` | Executa TypeScript simples, sem compilar (Node 22.18 ou superior) |
+| `node --max-old-space-size=4096 arquivo.js` | Aumenta o limite de memória do heap, em MB |
+| `node --trace-warnings arquivo.js` | Mostra de onde vêm os avisos |
+| `node --no-warnings arquivo.js` | Esconde os avisos |
+| `node --help` | Lista todas as opções |
+
+### Comandos dentro do REPL
+
+| Comando | Para que serve |
+| --- | --- |
+| `.help` | Lista os comandos do REPL |
+| `.editor` | Abre o modo de edição de várias linhas (termina com `Ctrl+D`) |
+| `.load arquivo.js` | Carrega um arquivo na sessão |
+| `.save arquivo.js` | Salva a sessão em um arquivo |
+| `.clear` | Limpa o contexto da sessão |
+| `_` | Guarda o resultado da última expressão |
+| `.exit` | Sai (também `Ctrl+D`, ou `Ctrl+C` duas vezes) |
+
+### Variáveis de ambiente
+
+| Comando | Para que serve |
+| --- | --- |
+| `NODE_ENV=production node app.js` | Linux/Mac: define a variável só para este comando |
+| `set NODE_ENV=production` e depois `node app.js` | Windows cmd: define na sessão |
+| `$env:NODE_ENV="production"; node app.js` | Windows PowerShell: define na sessão |
+| `NODE_OPTIONS=--max-old-space-size=4096` | Opções do Node aplicadas a todo processo da sessão |
+| `NODE_EXTRA_CA_CERTS=caminho/ca.pem` | Adiciona certificados de confiança (útil em rede corporativa) |
+| `NODE_PATH` | Pastas extras onde o Node procura módulos |
+
+### Depurar
+
+| Comando | Para que serve |
+| --- | --- |
+| `node --inspect arquivo.js` | Abre a porta de depuração; no Chrome, acesse `chrome://inspect` |
+| `node --inspect-brk arquivo.js` | Abre a depuração e pausa na primeira linha |
+| `node inspect arquivo.js` | Depurador de linha de comando (`cont`, `next`, `step`, `repl`) |
+| `debugger;` | No código: pausa a execução quando um depurador está conectado |
+| `console.table(dados)` | No código: mostra uma lista de objetos como tabela |
+| `console.dir(obj, { depth: null })` | No código: mostra o objeto inteiro, sem cortar níveis |
+| `console.time("x")` e `console.timeEnd("x")` | No código: mede o tempo entre os dois pontos |
+| `console.trace()` | No código: imprime a pilha de chamadas |
+| `console.error(msg)` | No código: escreve na saída de erro |
+
+### Testes
+
+| Comando | Para que serve |
+| --- | --- |
+| `npm test` | Roda o script `test` do projeto |
+| `npx jest` | Roda os testes com o Jest |
+| `npx jest --watch` | Roda de novo a cada alteração |
+| `npx jest arquivo.test.js` | Roda os testes de um arquivo |
+| `npx jest -t "nome do teste"` | Roda os testes cujo nome combina com o texto |
+| `npx jest --coverage` | Mostra a cobertura de testes |
+| `npx vitest` | Roda o Vitest em modo de observação |
+| `npx vitest run` | Roda o Vitest uma vez |
+| `npx playwright install` | Baixa os navegadores do Playwright |
+| `npx playwright test` | Roda os testes de navegador |
+| `npx playwright codegen https://exemplo.com` | Grava as ações no navegador e gera o código do teste |
+| `npx cypress open` | Abre o Cypress com interface |
+| `npx cypress run` | Roda o Cypress sem interface |
+
+## JavaScript: TypeScript, qualidade e projetos novos
+
+Estas ferramentas se instalam no projeto com `npm install -D` e rodam com `npx`, sem instalação global.
+
+### TypeScript
+
+| Comando | Para que serve |
+| --- | --- |
+| `npm install -D typescript` | Instala o compilador |
+| `npx tsc --init` | Cria o `tsconfig.json` |
+| `npx tsc` | Compila o projeto conforme o `tsconfig.json` |
+| `npx tsc --noEmit` | Só verifica os tipos, sem gerar arquivos |
+| `npx tsc --watch` | Compila de novo a cada alteração |
+| `npx tsx arquivo.ts` | Executa um arquivo TypeScript direto |
+| `npx ts-node arquivo.ts` | Alternativa para executar TypeScript |
+
+### ESLint e Prettier
+
+| Comando | Para que serve |
+| --- | --- |
+| `npm init @eslint/config@latest` | Cria a configuração do ESLint com perguntas |
+| `npx eslint .` | Analisa o projeto |
+| `npx eslint . --fix` | Corrige o que for possível automaticamente |
+| `npx prettier --write .` | Formata todos os arquivos |
+| `npx prettier --check .` | Só verifica a formatação |
+
+### Criar projetos e rodar servidores
+
+| Comando | Para que serve |
+| --- | --- |
+| `npm create vite@latest meu-app` | Cria um projeto com o Vite (pergunta o framework) |
+| `npm create vite@latest meu-app -- --template react-ts` | Cria já com o modelo React e TypeScript |
+| `npm run dev` | Sobe o servidor de desenvolvimento |
+| `npm run build` | Gera a versão de produção (pasta `dist` no Vite) |
+| `npm run preview` | Serve a versão gerada para conferir |
+| `npx vite --host --port 3000` | Sobe o Vite na rede local, na porta 3000 |
+| `npx create-next-app@latest` | Cria um projeto Next.js |
+| `npx @angular/cli new meu-app` | Cria um projeto Angular |
+| `ng serve` | Angular: sobe o servidor de desenvolvimento |
+| `ng generate component nome` | Angular: cria um componente |
+| `npm install express` | Adiciona o Express, para criar servidores web em Node |
+| `npx serve` | Serve a pasta atual como site estático |
+| `npx http-server -p 8080` | Serve a pasta atual na porta 8080 |
+
+### Deno e Bun (alternativas ao Node)
+
+| Comando | Para que serve |
+| --- | --- |
+| `deno --version` | Versão do Deno |
+| `deno run arquivo.ts` | Executa um arquivo |
+| `deno run --allow-net --allow-read arquivo.ts` | Executa liberando acesso à rede e a arquivos |
+| `deno task dev` | Executa uma tarefa do `deno.json` |
+| `deno test` | Roda os testes |
+| `deno fmt` e `deno lint` | Formata e analisa o código |
+| `deno upgrade` | Atualiza o Deno |
+| `bun --version` | Versão do Bun |
+| `bun run arquivo.ts` | Executa um arquivo |
+| `bun test` | Roda os testes |
+| `bun upgrade` | Atualiza o Bun |
+
+## Comparativo rápido: Python, Java, R e JavaScript
+
+As quatro linguagens resolvem as mesmas tarefas com ferramentas diferentes: Python, R e JavaScript instalam pacotes por comando, enquanto no Java as dependências ficam declaradas no `pom.xml` ou no `build.gradle`.
+
+| Tarefa | Python | Java | R | JavaScript |
+| --- | --- | --- | --- | --- |
+| Ver a versão | `python --version` | `java -version` | `R --version` | `node --version` |
+| Console interativo | `python` | `jshell` | `R` | `node` |
+| Executar um script | `python script.py` | `java Main.java` ou `java -jar app.jar` | `Rscript script.R` | `node arquivo.js` |
+| Executar uma expressão | `python -c "print(1)"` | `jshell` | `Rscript -e "print(1)"` | `node -e "console.log(1)"` |
+| Compilar | Não precisa | `javac Main.java` | Não precisa | Não precisa (TypeScript: `npx tsc`) |
+| Gerenciador de versões | `pyenv`, `uv`, `conda` | `SDKMAN`, `jenv` | `rig` | `nvm`, `fnm`, `Volta` |
+| Trocar de versão | `pyenv local 3.12` ou `uv python pin 3.12` | `sdk use java 21.0.5-tem` | `rig default 4.3` | `nvm use 22` |
+| Ambiente isolado | `python -m venv venv` | Dependências por projeto no `pom.xml` ou `build.gradle` | `renv::init()` | Pasta `node_modules` em cada projeto |
+| Instalar pacote | `pip install pacote` | Declarar no `pom.xml` ou `build.gradle` e rodar `mvn install` ou `gradle build` | `install.packages("pacote")` | `npm install pacote` |
+| Listar pacotes | `pip list` | `mvn dependency:tree` ou `gradle dependencies` | `installed.packages()` | `npm ls --depth=0` |
+| Remover pacote | `pip uninstall pacote` | Tirar do `pom.xml` ou `build.gradle` | `remove.packages("pacote")` | `npm uninstall pacote` |
+| Salvar as dependências | `pip freeze > requirements.txt` | Já ficam no `pom.xml` ou `build.gradle` | `renv::snapshot()` | Já ficam no `package.json` e no `package-lock.json` |
+| Recriar as dependências | `pip install -r requirements.txt` | `mvn install` ou `gradle build` | `renv::restore()` | `npm install` ou `npm ci` |
+| Rodar testes | `pytest` | `mvn test` ou `gradle test` | `devtools::test()` | `npm test` ou `npx jest` |
+| Empacotar | `python -m build` ou `pyinstaller --onefile script.py` | `mvn package` ou `jpackage` | `R CMD build pasta` | `npm run build` ou `npm pack` |
+| Ajuda | `help(x)` ou `python -m pydoc x` | `javadoc` e a documentação da Oracle | `?x` | `node --help` ou `npm help comando` |
+| Sair do console | `exit()` | `/exit` | `q()` | `.exit` |
+
+### Dicas que valem para as quatro
+
+- Use um ambiente por projeto: `venv` no Python, `renv` no R, wrapper (`mvnw` ou `gradlew`) no Java e `node_modules` no JavaScript.
+- Fixe as versões das dependências em arquivo (`requirements.txt`, `renv.lock`, `pom.xml`, `package-lock.json`) para recriar o ambiente em outra máquina.
+- A opção de ajuda quase sempre existe: `python -h`, `pip help`, `java --help`, `javac --help`, `mvn help:help`, `gradle help`, `R --help`, `node --help`, `npm help`.
+- Comando "não reconhecido" costuma ser problema de `PATH`: confira com `where` (Windows) ou `which` (Linux/Mac).
+- Os separadores mudam entre sistemas: caminhos com `\` no Windows e `/` no Linux/Mac, e classpath do Java com `;` no Windows e `:` no Linux/Mac.
+- Em rede corporativa com proxy, configure o proxy em cada ferramenta: `pip --proxy`, `npm config set proxy`, `.Renviron` no R e as opções de proxy do Maven e do Gradle.
+- Versões e nomes de pacotes de instalação (winget, brew, apt) mudam com o tempo: confirme com `--help` ou na documentação oficial antes de usar em produção.
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js" defer></script>
+<script>
+(function(){
+'use strict';
+var $=function(s){return document.querySelector(s)};
+var $$=function(s){return Array.prototype.slice.call(document.querySelectorAll(s))};
+var LN={py:'Python',java:'Java',r:'R',js:'JavaScript',cmp:'Comparativo'};
+var ORDER=['py','java','r','js','cmp'];
+var QUICK=['venv','pip install','pyenv','JAVA_HOME','mvn clean install','renv','npm install','nvm'];
+var norm=function(s){return s.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase()};
+var esc=function(s){return s.replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})};
+var pl=function(s){return s.replace(/`/g,'')};
+var ICON='<svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="5.5" y="5.5" width="8" height="8" rx="1.5"/><path d="M10.5 3.5v-1a1 1 0 0 0-1-1h-6a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h1"/></svg>';
+
+/* ---------- Leitura do conteúdo ---------- */
+function splitRow(l){
+  return l.trim().replace(/^\|/,'').replace(/\|$/,'').split(/(?<!\\)\|/).map(function(c){return c.trim().replace(/\\\|/g,'|')});
+}
+function parse(src){
+  var L=src.replace(/\r/g,'').split('\n'),secs=[],cur=null,i=0;
+  while(i<L.length){
+    var l=L[i],m;
+    if(l.indexOf('## ')===0){
+      var title=l.slice(3).trim();
+      m=title.match(/^(Python|Java|R|JavaScript): (.*)$/);
+      var lang=m?{Python:'py',Java:'java',R:'r',JavaScript:'js'}[m[1]]:'cmp';
+      var t=m?(/^(npm|pip)\b/.test(m[2])?m[2]:m[2].charAt(0).toUpperCase()+m[2].slice(1)):title;
+      cur={id:'s'+secs.length,title:t,lang:lang,blocks:[]};secs.push(cur);i++;continue;
+    }
+    if(!cur){i++;continue;}
+    if(l.indexOf('### ')===0){cur.blocks.push({t:'h3',text:l.slice(4).trim()});i++;continue;}
+    if(l.indexOf('```')===0){var buf=[];i++;while(i<L.length&&L[i].indexOf('```')!==0){buf.push(L[i]);i++;}i++;cur.blocks.push({t:'code',text:buf.join('\n')});continue;}
+    if(l.charAt(0)==='|'){var rows=[];while(i<L.length&&L[i].charAt(0)==='|'){rows.push(splitRow(L[i]));i++;}cur.blocks.push({t:'table',head:rows[0],rows:rows.slice(2)});continue;}
+    if(l.indexOf('- ')===0){var items=[];while(i<L.length&&L[i].indexOf('- ')===0){items.push(L[i].slice(2));i++;}cur.blocks.push({t:'ul',items:items});continue;}
+    if(l.trim()===''){i++;continue;}
+    var pb=[];
+    while(i<L.length&&L[i].trim()!==''&&!/^(#{2,3} |```|\||- )/.test(L[i])){pb.push(L[i]);i++;}
+    cur.blocks.push({t:'p',text:pb.join(' ')});
+  }
+  return secs;
+}
+var SECS=parse($('#md').textContent.trim());
+var TOTAL=0;
+SECS.forEach(function(s){
+  s.blocks.forEach(function(b){
+    if(b.t==='table'){
+      b.rows=b.rows.map(function(c){return {c:c,n:norm(pl(c.join(' ')))}});
+      var c0=0,c1=0;
+      b.rows.forEach(function(r){if(/`/.test(r.c[0]))c0++;if(r.c[1]&&/`/.test(r.c[1]))c1++;});
+      b.cmd=b.head.length<=2?(c1>c0?1:0):-1;
+      TOTAL+=b.rows.length;
+    }else if(b.t==='ul'){b.n=norm(pl(b.items.join(' ')));}
+    else if(b.t!=='h3'){b.n=norm(pl(b.text));}
+  });
+});
+
+/* ---------- Texto com destaque ---------- */
+function hl(s,T){
+  if(!T.length)return esc(s);
+  var n='',map=[],i,k;
+  for(i=0;i<s.length;i++){var m=norm(s.charAt(i));for(k=0;k<m.length;k++){n+=m.charAt(k);map.push(i);}}
+  var mark=new Uint8Array(s.length);
+  T.forEach(function(t){var p=0;while((p=n.indexOf(t,p))>-1){for(k=p;k<p+t.length;k++)mark[map[k]]=1;p+=t.length;}});
+  var out='',on=false;
+  for(i=0;i<s.length;i++){
+    if(mark[i]&&!on){out+='<mark>';on=true;}
+    if(!mark[i]&&on){out+='</mark>';on=false;}
+    out+=esc(s.charAt(i));
+  }
+  return on?out+'</mark>':out;
+}
+function inl(s,T){
+  return s.split(/(`[^`]+`)/).map(function(seg){
+    if(seg.length>2&&seg.charAt(0)==='`'&&seg.charAt(seg.length-1)==='`')return '<code>'+hl(seg.slice(1,-1),T)+'</code>';
+    return hl(seg,T);
+  }).join('');
+}
+
+/* ---------- Busca e filtros ---------- */
+var state={q:'',lang:'all'};
+function view(){
+  var T=norm(state.q).split(/\s+/).filter(Boolean);
+  var hits={py:0,java:0,r:0,js:0,cmp:0},out=[];
+  SECS.forEach(function(s){
+    var groups=[{h:null,items:[]}],g=groups[0];
+    s.blocks.forEach(function(b){if(b.t==='h3'){g={h:b,items:[]};groups.push(g);}else g.items.push(b);});
+    var kept=[],n=0;
+    groups.forEach(function(g){
+      var items=[];
+      g.items.forEach(function(b){
+        if(b.t==='table'){
+          var rows=T.length?b.rows.filter(function(r){return T.every(function(t){return r.n.indexOf(t)>-1})}):b.rows;
+          if(rows.length){items.push({t:'table',head:b.head,cmd:b.cmd,rows:rows});n+=rows.length;}
+        }else if(!T.length||T.every(function(t){return b.n.indexOf(t)>-1})){items.push(b);if(T.length)n++;}
+      });
+      if(items.length){if(g.h)kept.push(g.h);kept=kept.concat(items);}
+    });
+    if(kept.length){out.push({s:s,kept:kept,n:n});hits[s.lang]+=n;}
+  });
+  return {T:T,hits:hits,out:out};
+}
+function tbl(b,T){
+  var two=b.head.length<=2;
+  var h='<div class="tw"><table data-cmd="'+(two?b.cmd:'x')+'"><thead><tr>'+b.head.map(function(c){return '<th>'+inl(c,[])+'</th>'}).join('')+'</tr></thead><tbody>';
+  b.rows.forEach(function(r){
+    h+='<tr>'+r.c.map(function(c,k){
+      var codes=[],re=/`([^`]+)`/g,m;
+      while((m=re.exec(c)))codes.push(m[1]);
+      if(two&&k===b.cmd&&codes.length)return '<td><div class="cw"><span>'+inl(c,T)+'</span><button class="cp" type="button" aria-label="Copiar comando" title="Copiar" data-c="'+esc(codes.join('\n'))+'">'+ICON+'</button></div></td>';
+      return '<td>'+inl(c,T)+'</td>';
+    }).join('')+'</tr>';
+  });
+  return h+'</tbody></table></div>';
+}
+function sec(o,T){
+  var s=o.s,h='<section class="sec '+s.lang+'" id="'+s.id+'"><div class="sh"><span class="lang">'+LN[s.lang]+'</span><h2>'+esc(s.title)+'</h2><span class="cnt">'+o.n+' '+(T.length?(o.n===1?'resultado':'resultados'):(s.lang==='cmp'?'linhas':'comandos'))+'</span></div>';
+  o.kept.forEach(function(b){
+    if(b.t==='h3')h+='<h3>'+esc(b.text)+'</h3>';
+    else if(b.t==='p')h+='<p>'+inl(b.text,T)+'</p>';
+    else if(b.t==='ul')h+='<ul>'+b.items.map(function(x){return '<li>'+inl(x,T)+'</li>'}).join('')+'</ul>';
+    else if(b.t==='code')h+='<div class="pre"><pre><code>'+esc(b.text)+'</code></pre><button class="cp" type="button" aria-label="Copiar bloco" title="Copiar" data-c="'+esc(b.text)+'">'+ICON+'</button></div>';
+    else if(b.t==='table')h+=tbl(b,T);
+  });
+  return h+'</section>';
+}
+function navHtml(v){
+  var by={},m={},h='';
+  SECS.forEach(function(s){(by[s.lang]=by[s.lang]||[]).push(s)});
+  v.out.forEach(function(o){m[o.s.id]=o});
+  ORDER.forEach(function(l){
+    if(state.lang!=='all'&&state.lang!==l)return;
+    var links=(by[l]||[]).filter(function(s){return m[s.id]});
+    if(!links.length)return;
+    h+='<div class="ng '+l+'"><div class="gh"><i class="dot"></i>'+LN[l]+'</div>'+links.map(function(s){
+      return '<a class="nl" href="#'+s.id+'" data-id="'+s.id+'"><span>'+esc(s.title)+'</span>'+(state.q?'<b>'+m[s.id].n+'</b>':'')+'</a>';
+    }).join('')+'</div>';
+  });
+  return h;
+}
+function quickHtml(){return QUICK.map(function(q){return '<button class="qs" type="button" data-q="'+esc(q)+'">'+esc(q)+'</button>'}).join('')}
+var spy;
+function observe(){
+  if(spy)spy.disconnect();
+  if(!('IntersectionObserver' in window))return;
+  var hh=$('#top').offsetHeight;
+  spy=new IntersectionObserver(function(es){
+    es.forEach(function(e){
+      if(!e.isIntersecting)return;
+      var id=e.target.closest('.sec').id;
+      $$('.nl').forEach(function(a){a.classList.toggle('on',a.dataset.id===id)});
+    });
+  },{rootMargin:'-'+(hh+8)+'px 0px -70% 0px'});
+  $$('.sec h2').forEach(function(x){spy.observe(x)});
+}
+function updateChips(hits){
+  var tot=hits.py+hits.java+hits.r+hits.js+hits.cmp;
+  $$('.fchip').forEach(function(c){
+    var l=c.dataset.l;
+    c.setAttribute('aria-pressed',String(state.lang===l));
+    c.querySelector('.n').textContent=l==='all'?tot:hits[l];
+  });
+}
+function render(){
+  var v=view(),T=v.T;
+  document.body.classList.toggle('searching',T.length>0);
+  var list=v.out.filter(function(o){return state.lang==='all'||o.s.lang===state.lang});
+  var h='';
+  if(T.length||state.lang!=='all'){
+    var total=list.reduce(function(a,o){return a+o.n},0);
+    h+='<div class="res">'+(T.length?'<strong>'+total+'</strong> '+(total===1?'resultado':'resultados')+' para “'+esc(state.q.trim())+'”':'Mostrando só '+LN[state.lang])+'<button class="lnk" type="button" data-act="clear">Limpar filtros</button></div>';
+  }
+  if(!list.length)h+='<div class="empty"><h2>Nada encontrado</h2><p>Tente um termo mais curto ou outra grafia. Estes exemplos funcionam:</p><div class="quick">'+quickHtml()+'</div></div>';
+  else h+=list.map(function(o){return sec(o,T)}).join('');
+  $('#content').innerHTML=h;
+  $('#nav').innerHTML=navHtml(v);
+  updateChips(v.hits);
+  observe();
+}
+
+/* ---------- Interações ---------- */
+var input=$('#q'),sbox=$('#sbox'),tt;
+function toast(msg){var t=$('#toast');t.textContent=msg;t.classList.add('show');clearTimeout(tt);tt=setTimeout(function(){t.classList.remove('show')},2200);}
+function copy(text){
+  function fallback(){
+    var a=document.createElement('textarea');a.value=text;a.setAttribute('readonly','');a.style.cssText='position:fixed;opacity:0;top:0;left:0';
+    document.body.appendChild(a);a.select();var ok=false;try{ok=document.execCommand('copy');}catch(e){}a.remove();return ok;
+  }
+  function done(ok){toast(ok?'Copiado':'Não foi possível copiar. Selecione o texto e use Ctrl+C.');}
+  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(text).then(function(){done(true)},function(){done(fallback())});}
+  else done(fallback());
+}
+function setQuery(v){input.value=v;state.q=v;sbox.classList.toggle('has',!!v);render();}
+var deb;
+input.addEventListener('input',function(){
+  sbox.classList.toggle('has',!!input.value);
+  clearTimeout(deb);deb=setTimeout(function(){state.q=input.value;render();},80);
+});
+document.addEventListener('click',function(e){
+  var t=e.target.closest('.cp,[data-q],[data-l],[data-act],.nl');
+  if(!t)return;
+  if(t.classList.contains('cp')){copy(t.dataset.c);return;}
+  if(t.dataset.q!==undefined){setQuery(t.dataset.q);window.scrollTo(0,0);return;}
+  if(t.dataset.l!==undefined){state.lang=t.dataset.l;render();return;}
+  if(t.dataset.act==='clear'){state.lang='all';setQuery('');return;}
+  if(t.classList.contains('nl')){
+    e.preventDefault();
+    var el=document.getElementById(t.dataset.id);
+    document.body.classList.remove('navopen');$('#navbtn').setAttribute('aria-expanded','false');
+    if(el)el.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'});
+  }
+});
+document.addEventListener('keydown',function(e){
+  var tag=document.activeElement&&document.activeElement.tagName;
+  if((e.key==='/'&&tag!=='INPUT'&&tag!=='TEXTAREA')||((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k')){e.preventDefault();input.focus();input.select();}
+  else if(e.key==='Escape'){
+    if(document.body.classList.contains('navopen')){document.body.classList.remove('navopen');return;}
+    if(document.activeElement===input){if(input.value){setQuery('');}else input.blur();}
+  }
+});
+$('#theme').addEventListener('click',function(){
+  var r=document.documentElement,dark=r.dataset.theme?r.dataset.theme==='dark':matchMedia('(prefers-color-scheme: dark)').matches;
+  r.dataset.theme=dark?'light':'dark';
+});
+$('#navbtn').addEventListener('click',function(){
+  var o=document.body.classList.toggle('navopen');this.setAttribute('aria-expanded',String(o));
+});
+function setHdr(){document.documentElement.style.setProperty('--hdr',$('#top').offsetHeight+'px');}
+
+/* ---------- Início ---------- */
+(function init(){
+  var f=$('#filters'),h='';
+  [['all','Tudo'],['py','Python'],['java','Java'],['r','R'],['js','JavaScript'],['cmp','Comparativo']].forEach(function(x){
+    h+='<button class="fchip '+(x[0]==='all'?'':x[0])+'" type="button" data-l="'+x[0]+'" aria-pressed="false"><i class="dot"></i><span>'+x[1]+'</span><span class="n"></span></button>';
+  });
+  f.innerHTML=h;
+  $('#stats').textContent=TOTAL+' comandos em '+SECS.length+' seções. Atualizado em 2 de outubro de 2026.';
+  $('#quick').innerHTML='<span>Buscas rápidas</span>'+quickHtml();
+  render();setHdr();
+  window.addEventListener('resize',setHdr);
+  if('ResizeObserver' in window)new ResizeObserver(setHdr).observe($('#top'));
+})();
+
+/* ---------- PDF ---------- */
+var COL={py:[43,100,174],java:[184,63,11],r:[107,63,196],js:[21,128,61],cmp:[14,22,38]};
+function buildPdf(){
+  var J=window.jspdf.jsPDF,doc=new J({unit:'pt',format:'a4'});
+  var W=doc.internal.pageSize.getWidth(),H=doc.internal.pageSize.getHeight();
+  var M=42,TOP=56,BOT=H-52,CW=W-2*M,y;
+  function ink(){doc.setTextColor(14,22,38)}
+  function need(h){if(y+h>BOT){doc.addPage();y=TOP;}}
+  /* capa */
+  ['py','java','r','js'].forEach(function(k,i){var c=COL[k];doc.setFillColor(c[0],c[1],c[2]);doc.rect(M+i*60,72,52,6,'F');});
+  ink();doc.setFont('helvetica','bold');doc.setFontSize(30);doc.text('Guia de comandos',M,132);
+  doc.setFont('helvetica','normal');doc.setFontSize(18);doc.text('Python, Java, R e JavaScript',M,160);
+  doc.setFontSize(10);doc.setTextColor(86,97,118);doc.text('Atualizado em 2 de outubro de 2026',M,184);
+  y=236;ink();doc.setFont('helvetica','bold');doc.setFontSize(12);doc.text('Sumário',M,y);y+=22;
+  ORDER.forEach(function(l){
+    var list=SECS.filter(function(s){return s.lang===l});if(!list.length)return;
+    var c=COL[l];doc.setFont('helvetica','bold');doc.setFontSize(10.5);doc.setTextColor(c[0],c[1],c[2]);doc.text(LN[l],M,y);y+=15;
+    doc.setFont('helvetica','normal');doc.setFontSize(10);doc.setTextColor(40,48,66);
+    list.forEach(function(s){doc.text(s.title,M+12,y);y+=14;});y+=8;
+  });
+  doc.addPage();y=TOP;
+  SECS.forEach(function(s){
+    var c=COL[s.lang];need(150);
+    doc.setFillColor(c[0],c[1],c[2]);doc.rect(M,y,CW,2,'F');y+=20;
+    doc.setFont('helvetica','bold');doc.setFontSize(10);doc.setTextColor(c[0],c[1],c[2]);doc.text(LN[s.lang],M,y);y+=17;
+    ink();doc.setFontSize(15);var tl=doc.splitTextToSize(s.title,CW);doc.text(tl,M,y);y+=tl.length*18+4;
+    s.blocks.forEach(function(b){
+      if(b.t==='h3'){need(60);y+=8;doc.setFont('helvetica','bold');doc.setFontSize(11);doc.setTextColor(c[0],c[1],c[2]);doc.text(pl(b.text),M,y);y+=15;}
+      else if(b.t==='p'){
+        doc.setFont('helvetica','normal');doc.setFontSize(9.5);doc.setTextColor(40,48,66);
+        doc.splitTextToSize(pl(b.text),CW).forEach(function(ln){need(14);doc.text(ln,M,y);y+=13;});y+=5;
+      }else if(b.t==='ul'){
+        doc.setFont('helvetica','normal');doc.setFontSize(9.5);doc.setTextColor(40,48,66);
+        b.items.forEach(function(it){
+          var ls=doc.splitTextToSize(pl(it),CW-16);
+          ls.forEach(function(ln,k){need(14);if(k===0)doc.text('-',M+3,y);doc.text(ln,M+16,y);y+=13;});y+=2;
+        });y+=4;
+      }else if(b.t==='code'){
+        var ls=b.text.split('\n'),hg=ls.length*11+14;need(hg);
+        doc.setFillColor(238,242,248);doc.rect(M,y,CW,hg,'F');
+        doc.setFont('courier','normal');doc.setFontSize(8.5);ink();
+        ls.forEach(function(ln,k){doc.text(ln,M+8,y+15+k*11);});y+=hg+10;
+      }else if(b.t==='table'){
+        var two=b.head.length<=2,w=two?(b.cmd===0?[.5,.5]:[.3,.7]):null,cs={};
+        if(w){cs[0]={cellWidth:CW*w[0]};cs[1]={cellWidth:CW*w[1]};}
+        doc.autoTable({
+          startY:y+2,head:[b.head.map(pl)],body:b.rows.map(function(r){return r.c.map(pl)}),
+          margin:{left:M,right:M,top:TOP,bottom:52},theme:'grid',columnStyles:cs,
+          styles:{font:'helvetica',fontSize:8.2,cellPadding:{top:3.5,bottom:3.5,left:5,right:5},lineColor:[225,230,238],lineWidth:.5,textColor:[30,38,56],overflow:'linebreak',valign:'top'},
+          headStyles:{fillColor:c,textColor:[255,255,255],fontStyle:'bold',fontSize:8.5},
+          alternateRowStyles:{fillColor:[247,249,252]},
+          didParseCell:function(d){
+            if(d.section!=='body')return;
+            var raw=b.rows[d.row.index].c[d.column.index];
+            if(/`/.test(raw)&&(two?d.column.index===b.cmd:/^`[^`]+`$/.test(raw.trim()))){d.cell.styles.font='courier';d.cell.styles.fontSize=7.8;}
+          }
+        });
+        y=doc.lastAutoTable.finalY+14;
+      }
+    });
+    y+=10;
+  });
+  var n=doc.internal.getNumberOfPages(),p;
+  for(p=2;p<=n;p++){
+    doc.setPage(p);doc.setFont('helvetica','normal');doc.setFontSize(8);doc.setTextColor(120,130,150);
+    doc.text('Guia de comandos: Python, Java, R e JavaScript',M,28);
+    doc.text('Página '+(p-1)+' de '+(n-1),W-M,H-26,{align:'right'});
+    doc.setDrawColor(225,230,238);doc.line(M,34,W-M,34);
+  }
+  return doc;
+}
+var pdfBtn=$('#pdf'),busy=false;
+function pdfLabel(t){$('#pdft').textContent=t;}
+function printFallback(why){toast(why+' Abrindo a impressão: escolha Salvar como PDF.');setTimeout(function(){try{window.print();}catch(e){}},400);}
+pdfBtn.addEventListener('click',function(){
+  if(busy)return;
+  if(!(window.jspdf&&window.jspdf.jsPDF)){printFallback('A biblioteca de PDF não carregou.');return;}
+  busy=true;pdfBtn.disabled=true;pdfLabel('Gerando PDF');
+  setTimeout(function(){
+    var blob,name='guia-de-comandos-python-java-r-javascript.pdf';
+    try{blob=buildPdf().output('blob');}catch(err){busy=false;pdfBtn.disabled=false;pdfLabel('Gerar PDF');printFallback('Não foi possível montar o PDF.');return;}
+    var cl=window.claude&&window.claude.use?window.claude.use('downloads'):Promise.resolve(null);
+    cl.then(function(dl){
+      if(!dl)throw {code:'unavailable'};
+      return dl.save({filename:name,data:blob}).then(function(){toast('PDF salvo');});
+    }).catch(function(e){
+      var c=e&&e.code;
+      if(c==='declined')toast('Download cancelado.');
+      else if(c==='rate_limited')toast('Aguarde um instante e tente de novo.');
+      else printFallback('Este ambiente não permite salvar o arquivo direto.');
+    }).then(function(){busy=false;pdfBtn.disabled=false;pdfLabel('Gerar PDF');});
+  },30);
+});
+})();
+</script>
+</body>
+</html>
