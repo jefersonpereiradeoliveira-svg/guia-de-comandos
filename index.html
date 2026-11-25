@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Guia de comandos: Python, Java, R e JavaScript</title>
+<title>Guia de comandos: Python, Java, R, JavaScript e SQL</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
@@ -11,7 +11,7 @@
 :root{
   --bg:#FAFBFD; --surface:#FFFFFF; --ink:#0E1626; --muted:#566176; --rule:#E1E6EE;
   --code:#EEF2F8; --hover:#F3F6FB; --mark:#FFE58A; --markink:#1A1400;
-  --py:#2B64AE; --java:#B83F0B; --r:#6B3FC4; --js:#15803D;
+  --py:#2B64AE; --java:#B83F0B; --r:#6B3FC4; --js:#15803D; --sql:#BE185D;
   --sans:'IBM Plex Sans',system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
   --mono:'IBM Plex Mono',ui-monospace,'SF Mono',Menlo,Consolas,'Liberation Mono',monospace;
   --hdr:124px;
@@ -23,18 +23,18 @@
   :root:not([data-theme="light"]){
     --bg:#0A0F1C; --surface:#10172A; --ink:#E7ECF6; --muted:#9AA6BD; --rule:#1F2A44;
     --code:#0C1322; --hover:#131C33; --mark:#6B5A12; --markink:#FFF4C2;
-    --py:#7DB0F2; --java:#F59A66; --r:#BBA2FF; --js:#6EDC8F;
+    --py:#7DB0F2; --java:#F59A66; --r:#BBA2FF; --js:#6EDC8F; --sql:#F48FB8;
   }
 }
 :root[data-theme="dark"]{
   --bg:#0A0F1C; --surface:#10172A; --ink:#E7ECF6; --muted:#9AA6BD; --rule:#1F2A44;
   --code:#0C1322; --hover:#131C33; --mark:#6B5A12; --markink:#FFF4C2;
-  --py:#7DB0F2; --java:#F59A66; --r:#BBA2FF; --js:#6EDC8F;
+  --py:#7DB0F2; --java:#F59A66; --r:#BBA2FF; --js:#6EDC8F; --sql:#F48FB8;
 }
 *,*::before,*::after{box-sizing:inherit}
 html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + var(--hdr) + 8px);-webkit-text-size-adjust:100%}
 body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.6 var(--sans);-webkit-font-smoothing:antialiased}
-.py{--lc:var(--py)} .java{--lc:var(--java)} .r{--lc:var(--r)} .js{--lc:var(--js)} .cmp{--lc:var(--ink)}
+.py{--lc:var(--py)} .java{--lc:var(--java)} .r{--lc:var(--r)} .js{--lc:var(--js)} .sql{--lc:var(--sql)} .cmp{--lc:var(--ink)}
 button{font:inherit;color:inherit;cursor:pointer}
 :focus-visible{outline:2px solid var(--ink);outline-offset:2px}
 
@@ -155,7 +155,7 @@ mark{background:var(--mark);color:var(--markink);border-radius:3px;padding:0 1px
 
 /* Impressão e PDF do navegador */
 @media print{
-  :root:root:root{--bg:#fff;--surface:#fff;--ink:#111;--muted:#444;--rule:#cfcfcf;--code:#f2f2f2;--hover:#f6f6f6;--py:#2B64AE;--java:#B83F0B;--r:#6B3FC4;--js:#15803D;padding:0}
+  :root:root:root{--bg:#fff;--surface:#fff;--ink:#111;--muted:#444;--rule:#cfcfcf;--code:#f2f2f2;--hover:#f6f6f6;--py:#2B64AE;--java:#B83F0B;--r:#6B3FC4;--js:#15803D;--sql:#BE185D;padding:0}
   body{font-size:11px;background:#fff}
   .top,aside,.hero .quick,.cp,#toast,.res .lnk{display:none!important}
   .wrap{display:block;max-width:none;padding:0}
@@ -183,7 +183,7 @@ mark{background:var(--mark);color:var(--markink);border-radius:3px;padding:0 1px
     </div>
     <div class="search" id="sbox">
       <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><circle cx="8" cy="8" r="5.5"/><path d="M12.2 12.2 16 16"/></svg>
-      <input id="q" type="search" placeholder="Buscar comando ou palavra, por exemplo venv, mvn ou renv" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Buscar no guia">
+      <input id="q" type="search" placeholder="Buscar comando ou palavra, por exemplo venv, mvn ou JOIN" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Buscar no guia">
       <span class="kbd" aria-hidden="true">/</span>
     </div>
     <div class="filters" id="filters" role="group" aria-label="Filtrar por linguagem"></div>
@@ -194,8 +194,8 @@ mark{background:var(--mark);color:var(--markink);border-radius:3px;padding:0 1px
   <aside id="side" aria-label="Seções do guia"><nav id="nav"></nav></aside>
   <main id="main">
     <section class="hero" id="hero">
-      <h1>Guia de comandos: Python, Java, R e JavaScript</h1>
-      <p class="lead">Instalação, versões, ambientes, pacotes, execução e ferramentas de cada linguagem, em tabelas que você pesquisa e copia com um clique.</p>
+      <h1>Guia de comandos: Python, Java, R, JavaScript e SQL</h1>
+      <p class="lead">Instalação, versões, ambientes, pacotes, execução e ferramentas de cada linguagem, mais os comandos de SQL, em tabelas que você pesquisa e copia com um clique.</p>
       <p class="meta" id="stats"></p>
       <div class="quick" id="quick"></div>
     </section>
@@ -1724,6 +1724,325 @@ Estas ferramentas se instalam no projeto com `npm install -D` e rodam com `npx`,
 | `bun test` | Roda os testes |
 | `bun upgrade` | Atualiza o Bun |
 
+## SQL: consultas básicas
+
+Toda consulta começa com `SELECT` (o que trazer) e `FROM` (de onde trazer). Os exemplos usam duas tabelas de previdência: `clientes` (id, nome, cidade, uf, data_cadastro) e `aportes` (id, cliente_id, plano, valor, data_aporte).
+
+### SELECT, FROM e WHERE
+
+| Comando | Para que serve |
+| --- | --- |
+| `SELECT * FROM clientes;` | Traz todas as colunas e todas as linhas |
+| `SELECT nome, uf FROM clientes;` | Traz só as colunas escolhidas |
+| `SELECT nome FROM clientes WHERE uf = 'SP';` | Filtra as linhas por uma condição |
+| `SELECT DISTINCT uf FROM clientes;` | Remove valores repetidos |
+| `SELECT nome AS cliente FROM clientes c;` | Dá apelido à coluna (`AS`) e à tabela (`c`) |
+| `SELECT valor * 12 AS anual FROM aportes;` | Cria uma coluna calculada |
+
+Texto e datas vão entre aspas simples (`'SP'`, `'2025-01-15'`); números, sem aspas. Termine cada instrução com `;` e comente com `--` ou `/* ... */`.
+
+### Ordenar e limitar
+
+| Comando | Para que serve |
+| --- | --- |
+| `ORDER BY valor DESC` | Ordena do maior para o menor (`ASC` é o padrão) |
+| `ORDER BY uf, nome` | Ordena por mais de uma coluna |
+| `SELECT TOP 10 * FROM aportes` | Limita a 10 linhas no SQL Server |
+| `SELECT * FROM aportes LIMIT 10` | Limita a 10 linhas no PostgreSQL, MySQL e SQLite |
+| `OFFSET 0 ROWS FETCH NEXT 10 ROWS ONLY` | Forma padrão (Oracle, PostgreSQL, SQL Server 2012+) |
+
+### O asterisco (*)
+
+| Comando | Para que serve |
+| --- | --- |
+| `SELECT * FROM clientes` | Todas as colunas da tabela |
+| `SELECT c.*, a.valor FROM clientes c JOIN aportes a ON a.cliente_id = c.id` | Todas as colunas de uma tabela só, dentro de um JOIN |
+| `SELECT COUNT(*) FROM clientes` | Conta todas as linhas, inclusive as que têm NULL |
+| `SELECT valor * 12 FROM aportes` | Multiplicação |
+
+Use `SELECT *` para explorar uma tabela; em relatórios e automações liste as colunas pelo nome. No `LIKE` o coringa é `%`, não `*`.
+
+## SQL: filtros e operadores
+
+Os operadores ficam no `WHERE`, no `HAVING` e no `ON`. `AND` é avaliado antes de `OR`, então use parênteses para combinar condições.
+
+| Comando | Para que serve |
+| --- | --- |
+| `uf = 'SP'` | Igual |
+| `plano <> 'PGBL'` | Diferente (também `!=`) |
+| `valor >= 500` | Maior ou igual (também `>`, `<`, `<=`) |
+| `uf = 'SP' AND valor > 100` | As duas condições precisam ser verdadeiras |
+| `uf = 'SP' OR uf = 'PR'` | Basta uma condição ser verdadeira |
+| `NOT uf = 'SP'` | Nega a condição |
+| `uf IN ('SP', 'PR', 'MG')` | Valor está na lista |
+| `valor BETWEEN 300 AND 800` | Entre dois valores, incluindo os extremos |
+| `nome LIKE 'A%'` | Começa com A (`%` = qualquer quantidade de caracteres) |
+| `nome LIKE '%ar%'` | Contém "ar" |
+| `nome LIKE '_r%'` | Segunda letra é r (`_` = exatamente um caractere) |
+| `cidade IS NULL` | Valor vazio |
+| `cidade IS NOT NULL` | Valor preenchido |
+
+`NULL` não é igual a nada, nem a outro `NULL`: `WHERE cidade = NULL` nunca retorna linhas. E `NOT IN` com uma subconsulta que tenha `NULL` também não retorna nada; prefira `NOT EXISTS`.
+
+## SQL: agregação, agrupamento e JOINs
+
+Funções de agregação resumem várias linhas em um valor; `GROUP BY` faz esse resumo por grupo, e `JOIN` junta tabelas por uma coluna em comum.
+
+### Funções de agregação
+
+| Comando | Para que serve |
+| --- | --- |
+| `COUNT(*)` | Conta linhas |
+| `COUNT(cidade)` | Conta valores não nulos |
+| `COUNT(DISTINCT uf)` | Conta valores diferentes |
+| `SUM(valor)` | Soma |
+| `AVG(valor)` | Média |
+| `MIN(valor)` / `MAX(valor)` | Menor e maior valor |
+
+### GROUP BY e HAVING
+
+```
+SELECT plano, COUNT(*) AS qtd, SUM(valor) AS total
+FROM aportes
+WHERE data_aporte >= '2025-01-01'   -- filtra linhas antes de agrupar
+GROUP BY plano
+HAVING SUM(valor) > 1000;           -- filtra grupos depois de agrupar
+```
+
+Toda coluna do `SELECT` que não está dentro de uma função de agregação precisa estar no `GROUP BY`.
+
+### Tipos de JOIN
+
+| Comando | Para que serve |
+| --- | --- |
+| `INNER JOIN aportes a ON a.cliente_id = c.id` | Só linhas que têm correspondência nos dois lados (`JOIN` sozinho é igual) |
+| `LEFT JOIN aportes a ON a.cliente_id = c.id` | Tudo da tabela da esquerda e o que bater da direita |
+| `RIGHT JOIN aportes a ON a.cliente_id = c.id` | Tudo da direita e o que bater da esquerda |
+| `FULL OUTER JOIN aportes a ON a.cliente_id = c.id` | Tudo dos dois lados (não existe no MySQL) |
+| `CROSS JOIN aportes` | Todas as combinações entre as duas tabelas |
+| `JOIN clientes c2 ON c1.uf = c2.uf AND c1.id < c2.id` | Self join: a tabela com ela mesma |
+| `LEFT JOIN ... WHERE a.id IS NULL` | Linhas da esquerda sem correspondência (ex.: clientes sem aporte) |
+
+```
+SELECT c.nome, a.plano, a.valor
+FROM clientes c
+LEFT JOIN aportes a ON a.cliente_id = c.id;
+```
+
+### Empilhar resultados
+
+| Comando | Para que serve |
+| --- | --- |
+| `UNION` | Junta as linhas de duas consultas e remove duplicados |
+| `UNION ALL` | Junta mantendo duplicados (mais rápido) |
+| `INTERSECT` | Só as linhas que estão nas duas consultas |
+| `EXCEPT` | Linhas da primeira que não estão na segunda (`MINUS` no Oracle) |
+
+## SQL: subconsultas, CTE, CASE e funções de janela
+
+Estes recursos resolvem a maior parte dos relatórios sem tabelas temporárias.
+
+### Subconsultas e EXISTS
+
+| Comando | Para que serve |
+| --- | --- |
+| `WHERE valor > (SELECT AVG(valor) FROM aportes)` | Compara com um valor calculado por outra consulta |
+| `WHERE id IN (SELECT cliente_id FROM aportes)` | Filtra por uma lista vinda de outra consulta |
+| `WHERE EXISTS (SELECT 1 FROM aportes a WHERE a.cliente_id = c.id)` | Verifica se existe ao menos uma linha |
+| `WHERE NOT EXISTS (SELECT 1 FROM aportes a WHERE a.cliente_id = c.id)` | Verifica se não existe nenhuma linha |
+
+### CTE com WITH
+
+```
+WITH total_cliente AS (
+    SELECT cliente_id, SUM(valor) AS total
+    FROM aportes
+    GROUP BY cliente_id
+)
+SELECT c.nome, t.total
+FROM total_cliente t
+JOIN clientes c ON c.id = t.cliente_id
+WHERE t.total > 500;
+```
+
+### CASE WHEN
+
+```
+SELECT valor,
+    CASE
+        WHEN valor >= 1000 THEN 'Alto'
+        WHEN valor >= 500  THEN 'Médio'
+        ELSE 'Baixo'
+    END AS faixa,
+    SUM(CASE WHEN plano = 'PGBL' THEN valor ELSE 0 END) OVER () AS total_pgbl
+FROM aportes;
+```
+
+### Funções de janela (OVER)
+
+Calculam sobre um grupo de linhas sem juntar as linhas num resultado só. `PARTITION BY` define o grupo e `ORDER BY` a ordem dentro dele.
+
+| Comando | Para que serve |
+| --- | --- |
+| `ROW_NUMBER() OVER (PARTITION BY cliente_id ORDER BY data_aporte)` | Numera 1, 2, 3 dentro de cada grupo |
+| `RANK() OVER (ORDER BY valor DESC)` | Ranking com saltos em empates (1, 1, 3) |
+| `DENSE_RANK() OVER (ORDER BY valor DESC)` | Ranking sem saltos (1, 1, 2) |
+| `LAG(valor) OVER (PARTITION BY cliente_id ORDER BY data_aporte)` | Valor da linha anterior |
+| `LEAD(valor) OVER (PARTITION BY cliente_id ORDER BY data_aporte)` | Valor da linha seguinte |
+| `SUM(valor) OVER (PARTITION BY cliente_id ORDER BY data_aporte)` | Soma acumulada |
+| `AVG(valor) OVER (ORDER BY data_aporte ROWS BETWEEN 2 PRECEDING AND CURRENT ROW)` | Média móvel de 3 linhas |
+
+Último registro de cada cliente:
+
+```
+WITH ult AS (
+    SELECT *, ROW_NUMBER() OVER (PARTITION BY cliente_id ORDER BY data_aporte DESC) AS rn
+    FROM aportes
+)
+SELECT * FROM ult WHERE rn = 1;
+```
+
+## SQL: inserir, alterar e apagar dados
+
+Antes de um `UPDATE` ou `DELETE`, rode um `SELECT` com o mesmo `WHERE` para ver quais linhas serão afetadas. Sem `WHERE`, os dois comandos atingem a tabela inteira.
+
+### INSERT, UPDATE, DELETE e MERGE
+
+| Comando | Para que serve |
+| --- | --- |
+| `INSERT INTO clientes (id, nome, uf) VALUES (5, 'Elisa', 'SP');` | Insere uma linha |
+| `INSERT INTO aportes (id, cliente_id, plano, valor, data_aporte) VALUES (6, 5, 'PGBL', 400, '2025-07-10'), (7, 5, 'VGBL', 250, '2025-07-10');` | Insere várias linhas de uma vez |
+| `INSERT INTO historico (cliente_id, valor) SELECT cliente_id, valor FROM aportes;` | Insere o resultado de uma consulta |
+| `UPDATE clientes SET cidade = 'Belo Horizonte' WHERE id = 4;` | Altera valores |
+| `UPDATE aportes SET valor = valor * 1.10 WHERE plano = 'VGBL';` | Altera com cálculo |
+| `DELETE FROM aportes WHERE cliente_id = 9;` | Apaga linhas |
+| `MERGE INTO destino USING origem ON destino.id = origem.id WHEN MATCHED THEN UPDATE ... WHEN NOT MATCHED THEN INSERT ...;` | Atualiza se existe, insere se não existe (SQL Server e Oracle) |
+| `INSERT ... ON CONFLICT (id) DO UPDATE SET ...` | Mesmo que o MERGE, no PostgreSQL |
+| `INSERT ... ON DUPLICATE KEY UPDATE ...` | Mesmo que o MERGE, no MySQL |
+
+### Transações
+
+| Comando | Para que serve |
+| --- | --- |
+| `BEGIN TRANSACTION;` | Abre a transação no SQL Server (`BEGIN;` ou `START TRANSACTION;` no PostgreSQL e no MySQL) |
+| `COMMIT;` | Grava de vez tudo o que foi feito |
+| `ROLLBACK;` | Desfaz tudo desde o início da transação |
+| `SAVEPOINT p1;` | Cria um ponto intermediário (`SAVE TRANSACTION p1` no SQL Server) |
+| `ROLLBACK TO p1;` | Volta só até o ponto intermediário (`ROLLBACK TRANSACTION p1` no SQL Server) |
+
+Para mexer em produção com segurança: abra a transação, rode o comando, confira com `SELECT` e só então dê `COMMIT`.
+
+## SQL: estrutura do banco e permissões
+
+Os comandos de estrutura (DDL) criam e alteram tabelas, índices e views. Na maioria dos bancos eles não são desfeitos com `ROLLBACK` (SQL Server e PostgreSQL são exceções).
+
+### Criar e alterar tabelas
+
+```
+CREATE TABLE aportes (
+    id          INT PRIMARY KEY,
+    cliente_id  INT NOT NULL,
+    plano       VARCHAR(4) CHECK (plano IN ('PGBL', 'VGBL')),
+    valor       DECIMAL(15,2) NOT NULL CHECK (valor > 0),
+    data_aporte DATE NOT NULL,
+    FOREIGN KEY (cliente_id) REFERENCES clientes(id)
+);
+```
+
+| Comando | Para que serve |
+| --- | --- |
+| `ALTER TABLE clientes ADD email VARCHAR(120);` | Adiciona uma coluna |
+| `ALTER TABLE clientes DROP COLUMN email;` | Remove uma coluna |
+| `ALTER TABLE clientes ALTER COLUMN cidade VARCHAR(80);` | Muda o tipo no SQL Server |
+| `ALTER TABLE clientes ALTER COLUMN cidade TYPE VARCHAR(80);` | Muda o tipo no PostgreSQL |
+| `ALTER TABLE clientes MODIFY cidade VARCHAR(80);` | Muda o tipo no MySQL e no Oracle |
+| `ALTER TABLE clientes ADD CONSTRAINT uq_nome UNIQUE (nome);` | Adiciona uma restrição |
+| `TRUNCATE TABLE aportes;` | Esvazia a tabela, mantendo a estrutura (bem mais rápido que DELETE) |
+| `DROP TABLE aportes;` | Apaga a tabela inteira |
+
+### Tipos de dados e restrições
+
+| Comando | Para que serve |
+| --- | --- |
+| `INT` / `BIGINT` | Números inteiros |
+| `DECIMAL(15,2)` | Números exatos: use para dinheiro e cotas |
+| `FLOAT` | Números aproximados: evite para valores financeiros |
+| `VARCHAR(100)` | Texto de tamanho variável (`NVARCHAR` no SQL Server para Unicode) |
+| `CHAR(2)` | Texto de tamanho fixo, bom para UF e códigos |
+| `DATE` / `DATETIME` / `TIMESTAMP` | Data, ou data e hora |
+| `PRIMARY KEY` | Identifica a linha: valor único e não nulo |
+| `FOREIGN KEY ... REFERENCES` | O valor precisa existir na outra tabela |
+| `NOT NULL` | A coluna sempre tem valor |
+| `UNIQUE` | Não permite valores repetidos |
+| `CHECK (valor > 0)` | O valor precisa obedecer à regra |
+| `DEFAULT 0` | Valor usado quando nada é informado |
+
+### Índices, views e permissões
+
+| Comando | Para que serve |
+| --- | --- |
+| `CREATE INDEX ix_aportes_cliente ON aportes (cliente_id);` | Acelera buscas e JOINs nessa coluna |
+| `CREATE UNIQUE INDEX ix_nome ON clientes (nome);` | Índice que também impede repetidos |
+| `DROP INDEX ix_aportes_cliente ON aportes;` | Remove o índice (SQL Server; nos outros, sem o `ON`) |
+| `CREATE VIEW vw_total AS SELECT cliente_id, SUM(valor) AS total FROM aportes GROUP BY cliente_id;` | Salva uma consulta com nome, usada como tabela |
+| `DROP VIEW vw_total;` | Remove a view |
+| `GRANT SELECT ON clientes TO analista;` | Dá permissão de leitura |
+| `GRANT SELECT, INSERT, UPDATE ON aportes TO operador;` | Dá várias permissões |
+| `REVOKE INSERT ON aportes FROM operador;` | Retira uma permissão |
+
+## SQL: funções por banco e ordem de execução
+
+As funções são onde os bancos mais diferem. A tabela mostra o equivalente em SQL Server, PostgreSQL e MySQL.
+
+### Funções de texto, data, número e nulos
+
+| Tarefa | SQL Server | PostgreSQL | MySQL |
+| --- | --- | --- | --- |
+| Concatenar | `CONCAT(a, b)` ou `a + b` | `CONCAT(a, b)` ou `a \|\| b` | `CONCAT(a, b)` |
+| Maiúscula / minúscula | `UPPER(t)` / `LOWER(t)` | `UPPER(t)` / `LOWER(t)` | `UPPER(t)` / `LOWER(t)` |
+| Primeira letra maiúscula | Não tem (criar função) | `INITCAP(t)` | Não tem (criar função) |
+| Tamanho do texto | `LEN(t)` | `LENGTH(t)` | `CHAR_LENGTH(t)` |
+| Pedaço do texto | `SUBSTRING(t, 1, 3)` | `SUBSTRING(t, 1, 3)` | `SUBSTRING(t, 1, 3)` |
+| Tirar espaços | `TRIM(t)` | `TRIM(t)` | `TRIM(t)` |
+| Substituir | `REPLACE(t, 'a', 'b')` | `REPLACE(t, 'a', 'b')` | `REPLACE(t, 'a', 'b')` |
+| Data de hoje | `CAST(GETDATE() AS DATE)` | `CURRENT_DATE` | `CURDATE()` |
+| Data e hora atual | `GETDATE()` | `NOW()` | `NOW()` |
+| Ano da data | `YEAR(d)` | `EXTRACT(YEAR FROM d)` | `YEAR(d)` |
+| Somar 30 dias | `DATEADD(DAY, 30, d)` | `d + INTERVAL '30 days'` | `DATE_ADD(d, INTERVAL 30 DAY)` |
+| Diferença em dias | `DATEDIFF(DAY, d1, d2)` | `d2 - d1` | `DATEDIFF(d2, d1)` |
+| Formatar dd/mm/aaaa | `FORMAT(d, 'dd/MM/yyyy')` | `TO_CHAR(d, 'DD/MM/YYYY')` | `DATE_FORMAT(d, '%d/%m/%Y')` |
+| Arredondar | `ROUND(x, 2)` | `ROUND(x, 2)` | `ROUND(x, 2)` |
+| Converter tipo | `CAST(x AS INT)` ou `CONVERT(INT, x)` | `CAST(x AS INT)` ou `x::int` | `CAST(x AS SIGNED)` |
+| Trocar NULL por valor | `COALESCE(x, 0)` ou `ISNULL(x, 0)` | `COALESCE(x, 0)` | `COALESCE(x, 0)` ou `IFNULL(x, 0)` |
+| Evitar divisão por zero | `x / NULLIF(y, 0)` | `x / NULLIF(y, 0)` | `x / NULLIF(y, 0)` |
+
+### Ordem de execução de uma consulta
+
+O banco não lê a consulta na ordem em que ela é escrita. Por isso um apelido criado no `SELECT` não pode ser usado no `WHERE`, mas pode no `ORDER BY`.
+
+- 1º `FROM` e `JOIN`: monta as tabelas
+- 2º `WHERE`: filtra as linhas
+- 3º `GROUP BY`: agrupa
+- 4º `HAVING`: filtra os grupos
+- 5º `SELECT`: escolhe e calcula as colunas (inclui funções de janela)
+- 6º `DISTINCT`: remove repetidos
+- 7º `ORDER BY`: ordena
+- 8º `LIMIT`, `TOP` ou `FETCH`: corta o resultado
+
+### Esqueleto completo
+
+```
+WITH base AS (SELECT ... FROM ...)       -- opcional
+SELECT DISTINCT t1.coluna, SUM(t2.valor) AS total
+FROM tabela1 t1
+LEFT JOIN tabela2 t2 ON t2.id_t1 = t1.id
+WHERE t1.status = 'ativo'
+GROUP BY t1.coluna
+HAVING SUM(t2.valor) > 1000
+ORDER BY total DESC
+LIMIT 10;                                -- TOP 10 no SQL Server
+```
+
 ## Comparativo rápido: Python, Java, R e JavaScript
 
 As quatro linguagens resolvem as mesmas tarefas com ferramentas diferentes: Python, R e JavaScript instalam pacotes por comando, enquanto no Java as dependências ficam declaradas no `pom.xml` ou no `build.gradle`.
@@ -1765,9 +2084,9 @@ As quatro linguagens resolvem as mesmas tarefas com ferramentas diferentes: Pyth
 'use strict';
 var $=function(s){return document.querySelector(s)};
 var $$=function(s){return Array.prototype.slice.call(document.querySelectorAll(s))};
-var LN={py:'Python',java:'Java',r:'R',js:'JavaScript',cmp:'Comparativo'};
-var ORDER=['py','java','r','js','cmp'];
-var QUICK=['venv','pip install','pyenv','JAVA_HOME','mvn clean install','renv','npm install','nvm'];
+var LN={py:'Python',java:'Java',r:'R',js:'JavaScript',sql:'SQL',cmp:'Comparativo'};
+var ORDER=['py','java','r','js','sql','cmp'];
+var QUICK=['venv','pip install','pyenv','JAVA_HOME','mvn clean install','renv','npm install','nvm','SELECT','JOIN'];
 var norm=function(s){return s.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase()};
 var esc=function(s){return s.replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})};
 var pl=function(s){return s.replace(/`/g,'')};
@@ -1783,8 +2102,8 @@ function parse(src){
     var l=L[i],m;
     if(l.indexOf('## ')===0){
       var title=l.slice(3).trim();
-      m=title.match(/^(Python|Java|R|JavaScript): (.*)$/);
-      var lang=m?{Python:'py',Java:'java',R:'r',JavaScript:'js'}[m[1]]:'cmp';
+      m=title.match(/^(Python|Java|R|JavaScript|SQL): (.*)$/);
+      var lang=m?{Python:'py',Java:'java',R:'r',JavaScript:'js',SQL:'sql'}[m[1]]:'cmp';
       var t=m?(/^(npm|pip)\b/.test(m[2])?m[2]:m[2].charAt(0).toUpperCase()+m[2].slice(1)):title;
       cur={id:'s'+secs.length,title:t,lang:lang,blocks:[]};secs.push(cur);i++;continue;
     }
@@ -1841,7 +2160,7 @@ function inl(s,T){
 var state={q:'',lang:'all'};
 function view(){
   var T=norm(state.q).split(/\s+/).filter(Boolean);
-  var hits={py:0,java:0,r:0,js:0,cmp:0},out=[];
+  var hits={py:0,java:0,r:0,js:0,sql:0,cmp:0},out=[];
   SECS.forEach(function(s){
     var groups=[{h:null,items:[]}],g=groups[0];
     s.blocks.forEach(function(b){if(b.t==='h3'){g={h:b,items:[]};groups.push(g);}else g.items.push(b);});
@@ -1914,7 +2233,7 @@ function observe(){
   $$('.sec h2').forEach(function(x){spy.observe(x)});
 }
 function updateChips(hits){
-  var tot=hits.py+hits.java+hits.r+hits.js+hits.cmp;
+  var tot=hits.py+hits.java+hits.r+hits.js+hits.sql+hits.cmp;
   $$('.fchip').forEach(function(c){
     var l=c.dataset.l;
     c.setAttribute('aria-pressed',String(state.lang===l));
@@ -1990,11 +2309,11 @@ function setHdr(){document.documentElement.style.setProperty('--hdr',$('#top').o
 /* ---------- Início ---------- */
 (function init(){
   var f=$('#filters'),h='';
-  [['all','Tudo'],['py','Python'],['java','Java'],['r','R'],['js','JavaScript'],['cmp','Comparativo']].forEach(function(x){
+  [['all','Tudo'],['py','Python'],['java','Java'],['r','R'],['js','JavaScript'],['sql','SQL'],['cmp','Comparativo']].forEach(function(x){
     h+='<button class="fchip '+(x[0]==='all'?'':x[0])+'" type="button" data-l="'+x[0]+'" aria-pressed="false"><i class="dot"></i><span>'+x[1]+'</span><span class="n"></span></button>';
   });
   f.innerHTML=h;
-  $('#stats').textContent=TOTAL+' comandos em '+SECS.length+' seções. Atualizado em 2 de outubro de 2026.';
+  $('#stats').textContent=TOTAL+' comandos em '+SECS.length+' seções. Atualizado em 24 de novembro de 2026.';
   $('#quick').innerHTML='<span>Buscas rápidas</span>'+quickHtml();
   render();setHdr();
   window.addEventListener('resize',setHdr);
@@ -2002,7 +2321,7 @@ function setHdr(){document.documentElement.style.setProperty('--hdr',$('#top').o
 })();
 
 /* ---------- PDF ---------- */
-var COL={py:[43,100,174],java:[184,63,11],r:[107,63,196],js:[21,128,61],cmp:[14,22,38]};
+var COL={py:[43,100,174],java:[184,63,11],r:[107,63,196],js:[21,128,61],sql:[190,24,93],cmp:[14,22,38]};
 function buildPdf(){
   var J=window.jspdf.jsPDF,doc=new J({unit:'pt',format:'a4'});
   var W=doc.internal.pageSize.getWidth(),H=doc.internal.pageSize.getHeight();
@@ -2010,10 +2329,10 @@ function buildPdf(){
   function ink(){doc.setTextColor(14,22,38)}
   function need(h){if(y+h>BOT){doc.addPage();y=TOP;}}
   /* capa */
-  ['py','java','r','js'].forEach(function(k,i){var c=COL[k];doc.setFillColor(c[0],c[1],c[2]);doc.rect(M+i*60,72,52,6,'F');});
+  ['py','java','r','js','sql'].forEach(function(k,i){var c=COL[k];doc.setFillColor(c[0],c[1],c[2]);doc.rect(M+i*60,72,52,6,'F');});
   ink();doc.setFont('helvetica','bold');doc.setFontSize(30);doc.text('Guia de comandos',M,132);
-  doc.setFont('helvetica','normal');doc.setFontSize(18);doc.text('Python, Java, R e JavaScript',M,160);
-  doc.setFontSize(10);doc.setTextColor(86,97,118);doc.text('Atualizado em 2 de outubro de 2026',M,184);
+  doc.setFont('helvetica','normal');doc.setFontSize(18);doc.text('Python, Java, R, JavaScript e SQL',M,160);
+  doc.setFontSize(10);doc.setTextColor(86,97,118);doc.text('Atualizado em 24 de novembro de 2026',M,184);
   y=236;ink();doc.setFont('helvetica','bold');doc.setFontSize(12);doc.text('Sumário',M,y);y+=22;
   ORDER.forEach(function(l){
     var list=SECS.filter(function(s){return s.lang===l});if(!list.length)return;
@@ -2066,7 +2385,7 @@ function buildPdf(){
   var n=doc.internal.getNumberOfPages(),p;
   for(p=2;p<=n;p++){
     doc.setPage(p);doc.setFont('helvetica','normal');doc.setFontSize(8);doc.setTextColor(120,130,150);
-    doc.text('Guia de comandos: Python, Java, R e JavaScript',M,28);
+    doc.text('Guia de comandos: Python, Java, R, JavaScript e SQL',M,28);
     doc.text('Página '+(p-1)+' de '+(n-1),W-M,H-26,{align:'right'});
     doc.setDrawColor(225,230,238);doc.line(M,34,W-M,34);
   }
